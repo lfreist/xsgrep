@@ -15,5 +15,6 @@ find_package(Boost 1.74 REQUIRED COMPONENTS program_options)
 include_directories(${Boost_INCLUDE_DIR})
 
 add_subdirectory(x-search)
+include_directories(x-search/include)
 
 add_subdirectory(src)
