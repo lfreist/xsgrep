@@ -89,13 +89,16 @@ std::vector<GrepPartialResult> GrepSearcher::process_plain(
     xs::DataChunk* data) const {
   xs::DataChunk tmp_chunk;
   xs::DataChunk* op_chunk = data;
+  std::string pattern = _options.pattern;
   if (_options.ignore_case) {
     tmp_chunk = xs::DataChunk(*data);
     xs::utils::str::simd::toLower(tmp_chunk.data(), tmp_chunk.size());
     op_chunk = &tmp_chunk;
+    std::transform(_options.pattern.begin(), _options.pattern.end(),
+                   pattern.begin(), ::tolower);
   }
   std::vector<uint64_t> byte_offsets_match =
-      xs::search::global_byte_offsets_match(op_chunk, _options.pattern,
+      xs::search::global_byte_offsets_match(op_chunk, pattern,
                                             !_options.only_matching);
   std::vector<uint64_t> byte_offsets_line;
   std::vector<uint64_t> line_numbers;
