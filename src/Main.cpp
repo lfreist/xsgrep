@@ -4,12 +4,129 @@
 #include <xsearch/xsearch.h>
 
 #include <boost/program_options.hpp>
+#include <filesystem>
 #include <iostream>
 
 #include "./tasks/GrepOutput.h"
 #include "./tasks/GrepSearcher.h"
 
 namespace po = boost::program_options;
+
+void get_files_recursive(const std::filesystem::path& in_path,
+                         std::vector<std::string>* files, int depth) {
+  if (std::filesystem::is_regular_file(in_path)) {
+    files->push_back(std::filesystem::path(in_path));
+  }
+  if (depth == 0) {
+    return;
+  }
+  if (std::filesystem::is_directory(in_path)) {
+    for (auto& obj : std::filesystem::directory_iterator(in_path)) {
+      get_files_recursive(obj, files, depth - 1);
+    }
+  }
+}
+
+std::vector<std::string> get_files(const std::filesystem::path& in_path,
+                                   int max_depth = -1) {
+  std::vector<std::string> files;
+  get_files_recursive(in_path, &files, max_depth);
+  return files;
+}
+
+void run_on_single_file(GrepOptions options, bool count, bool no_mmap,
+                        int num_threads, int max_reader_threads,
+                        size_t chunk_size, bool binary_text = false,
+                        const std::string& meta_file_path = "") {
+  std::vector<std::unique_ptr<xs::task::base::InplaceProcessor<xs::DataChunk>>>
+      processors;
+
+  // check for compression and add decompression task --------------------------
+  if (meta_file_path.empty()) {
+    if (options.line_number) {
+      // this task creates new line mapping data necessary for searching line
+      // numbers
+      processors.push_back(
+          std::make_unique<xs::task::processor::NewLineSearcher>());
+    }
+  } else {
+    xs::MetaFile metaFile(meta_file_path, std::ios::in);
+    switch (metaFile.get_compression_type()) {
+      case xs::CompressionType::LZ4:
+        processors.push_back(
+            std::make_unique<xs::task::processor::LZ4Decompressor>());
+        break;
+      case xs::CompressionType::ZSTD:
+        processors.emplace_back(
+            std::make_unique<xs::task::processor::ZSTDDecompressor>());
+        break;
+      default:
+        break;
+    }
+  }
+
+  // set reader ----------------------------------------------------------------
+  std::unique_ptr<xs::task::base::DataProvider<xs::DataChunk>> reader;
+  if (options.file_path.empty() || options.file_path == "-") {
+    // read stdin
+    // for porting to windows, we need to open 'CON' instead of '/dev/stdin'...
+    reader = std::make_unique<xs::task::reader::FileBlockReader>(
+        "/dev/stdin", chunk_size, 65536, binary_text);
+  } else {
+    if (meta_file_path.empty()) {
+      // no meta file provided
+      if (no_mmap || chunk_size < static_cast<uint64_t>(1 << 20)) {
+        // don't read using mmap
+        //  Why do we use mmap only of chunk_size >= 1 MiB? It might be that
+        //  using mmap on smaller chunks causes memory fragmentation.
+        reader = std::make_unique<xs::task::reader::FileBlockReader>(
+            options.file_path, chunk_size, 65536, binary_text);
+      } else {  // read using mmap
+        reader = std::make_unique<xs::task::reader::FileBlockReaderMMAP>(
+            options.file_path, chunk_size, 65536, binary_text);
+      }
+    } else {  // meta file provided
+      if (no_mmap) {
+        // don't read using mmap
+        reader = std::make_unique<xs::task::reader::FileBlockMetaReader>(
+            options.file_path, meta_file_path, max_reader_threads);
+      } else {  // read using mmap
+        reader = std::make_unique<xs::task::reader::FileBlockMetaReaderMMAP>(
+            options.file_path, meta_file_path, max_reader_threads);
+      }
+    }
+  }
+
+  // set searchers -------------------------------------------------------------
+  if (count) {
+    // count set -> count results and output number in the end -----------------
+    auto searcher = std::make_unique<xs::task::searcher::LineCounter>(
+        options.pattern, options.regex, options.ignore_case);
+    auto extern_searcher =
+        xs::Executor<xs::DataChunk, xs::result::base::CountResult, uint64_t>(
+            num_threads, max_reader_threads, std::move(reader),
+            std::move(processors), std::move(searcher));
+    extern_searcher.join();
+    if (options.print_file_path) {
+      if (options.color) {
+        std::cout << MAGENTA << options.file_path << CYAN << ':' << COLOR_RESET;
+      } else {
+        std::cout << options.file_path << ':';
+      }
+    }
+    std::cout << extern_searcher.getResult()->size() << std::endl;
+    // -------------------------------------------------------------------------
+  } else {
+    // no count set -> run grep and output results
+    auto searcher = std::make_unique<GrepSearcher>(options);
+    auto extern_searcher =
+        xs::Executor<xs::DataChunk, GrepOutput, std::vector<GrepPartialResult>,
+                     GrepOptions>(num_threads, max_reader_threads,
+                                  std::move(reader), std::move(processors),
+                                  std::move(searcher), std::move(options));
+    extern_searcher.join();
+  }
+}
 
 int main(int argc, char** argv) {
   INLINE_BENCHMARK_WALL_START(_, "total");
@@ -19,10 +136,12 @@ int main(int argc, char** argv) {
 #endif
   GrepOptions grep_options;
   // additional options
-  bool no_mmap = false;
-  bool fixed_strings = false;
+  bool no_mmap = false;        // dont read data using mmap
+  bool fixed_strings = false;  // treat regex pattern as string
+  bool binary_text = false;    // treat binary file as if it were a text file
+  int recursive = 1;           // recursively consider files up to this depth
   size_t chunk_size = 16777216;
-  bool count = false;
+  bool count = false;  // count matches
   std::string file_path;
   std::string meta_file_path;
   int num_threads = 0;
@@ -42,13 +161,12 @@ int main(int argc, char** argv) {
 
   // defining possible command line arguments ----------------------------------
   add_positional("PATTERN", 1);
-  add_positional("FILE", 1);
-  add_positional("METAFILE", 1);
+  add_positional("PATH", 1);
   add("PATTERN", po::value<std::string>(&grep_options.pattern)->required(),
       "search pattern");
-  add("FILE", po::value<std::string>(&file_path)->default_value(""),
+  add("PATH", po::value<std::string>(&file_path)->default_value(""),
       "input file, stdin if '-' or empty");
-  add("METAFILE", po::value<std::string>(&meta_file_path)->default_value(""),
+  add("metafile,m", po::value<std::string>(&meta_file_path)->default_value(""),
       "metafile of the corresponding FILE");
   add("help,h", "prints this help message");
   add("version,V", "display version information and exit");
@@ -59,6 +177,12 @@ int main(int argc, char** argv) {
       "number of concurrent reading tasks (default is number of threads");
   add("count,c", po::bool_switch(&count),
       "print only a count of selected lines");
+  add("text,a", po::bool_switch(&binary_text)->default_value(false),
+      "process a binary file as if it were text");
+  add("recursive,r",
+      po::value<int>(&recursive)->default_value(1)->implicit_value(-1),
+      "recursively search files in subdirectories with provided max depth (-1 "
+      "is infinite depth).");
   add("byte-offset,b", po::bool_switch(&grep_options.byte_offset),
       "print the byte offset with output lines");
   add("line-number,n", po::bool_switch(&grep_options.line_number),
@@ -117,88 +241,18 @@ int main(int argc, char** argv) {
   //  a) <= 0 -> num_threads
   num_max_readers = num_max_readers <= 0 ? num_threads : num_max_readers;
 
-  // ===== Setup xs::Executor for searching ====================================
-
-  std::vector<std::unique_ptr<xs::task::base::InplaceProcessor<xs::DataChunk>>>
-      processors;
-
-  // check for compression and add decompression task --------------------------
-  if (meta_file_path.empty()) {
-    if (grep_options.line_number) {
-      // this task creates new line mapping data necessary for searching line
-      // numbers
-      processors.push_back(
-          std::make_unique<xs::task::processor::NewLineSearcher>());
-    }
+  if (!meta_file_path.empty()) {
+    grep_options.file_path = file_path;
+    run_on_single_file(grep_options, count, no_mmap, num_threads,
+                       num_max_readers, chunk_size, false, meta_file_path);
   } else {
-    xs::MetaFile metaFile(meta_file_path, std::ios::in);
-    switch (metaFile.get_compression_type()) {
-      case xs::CompressionType::LZ4:
-        processors.push_back(
-            std::make_unique<xs::task::processor::LZ4Decompressor>());
-        break;
-      case xs::CompressionType::ZSTD:
-        processors.emplace_back(
-            std::make_unique<xs::task::processor::ZSTDDecompressor>());
-        break;
-      default:
-        break;
+    grep_options.print_file_path = true;
+    for (const auto& file :
+         get_files(std::filesystem::path(file_path), recursive)) {
+      grep_options.file_path = file;
+      run_on_single_file(grep_options, count, no_mmap, num_threads,
+                         num_max_readers, chunk_size, binary_text);
     }
-  }
-
-  // set reader ----------------------------------------------------------------
-  std::unique_ptr<xs::task::base::DataProvider<xs::DataChunk>> reader;
-  if (file_path.empty() || file_path == "-") {
-    // read stdin
-    // for porting to windows, we need to open 'CON' instead of '/dev/stdin'...
-    reader = std::make_unique<xs::task::reader::FileBlockReader>("/dev/stdin",
-                                                                 chunk_size);
-  } else {
-    if (meta_file_path.empty()) {
-      // no meta file provided
-      if (no_mmap || chunk_size < static_cast<uint64_t>(1 << 20)) {
-        // don't read using mmap
-        //  Why do we use mmap only of chunk_size >= 1 MiB? It might be that
-        //  using mmap on smaller chunks causes memory fragmentation.
-        reader = std::make_unique<xs::task::reader::FileBlockReader>(
-            file_path, chunk_size);
-      } else {  // read using mmap
-        reader = std::make_unique<xs::task::reader::FileBlockReaderMMAP>(
-            file_path, chunk_size);
-      }
-    } else {  // meta file provided
-      if (no_mmap) {
-        // don't read using mmap
-        reader = std::make_unique<xs::task::reader::FileBlockMetaReader>(
-            file_path, meta_file_path);
-      } else {  // read using mmap
-        reader = std::make_unique<xs::task::reader::FileBlockMetaReaderMMAP>(
-            file_path, meta_file_path);
-      }
-    }
-  }
-
-  // set searchers -------------------------------------------------------------
-  if (count) {
-    // count set -> count results and output number in the end -----------------
-    auto searcher = std::make_unique<xs::task::searcher::LineCounter>(
-        grep_options.pattern, grep_options.regex, grep_options.ignore_case);
-    auto extern_searcher =
-        xs::Executor<xs::DataChunk, xs::result::base::CountResult, uint64_t>(
-            num_threads, num_max_readers, std::move(reader),
-            std::move(processors), std::move(searcher));
-    extern_searcher.join();
-    std::cout << extern_searcher.getResult()->size() << std::endl;
-    // -------------------------------------------------------------------------
-  } else {
-    // no count set -> run grep and output results
-    auto searcher = std::make_unique<GrepSearcher>(grep_options);
-    auto extern_searcher =
-        xs::Executor<xs::DataChunk, GrepOutput, std::vector<GrepPartialResult>,
-                     GrepOptions>(num_threads, num_max_readers,
-                                  std::move(reader), std::move(processors),
-                                  std::move(searcher), std::move(grep_options));
-    extern_searcher.join();
   }
 
   INLINE_BENCHMARK_WALL_STOP("total");

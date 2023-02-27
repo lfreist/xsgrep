@@ -49,11 +49,18 @@ size_t GrepOutput::size() const { return _lines_written; }
 // _____________________________________________________________________________
 void GrepOutput::add(std::vector<GrepPartialResult> partial_result) {
   for (auto& r : partial_result) {
+    if (_options.print_file_path) {
+      if (_options.color) {
+        _ostream << MAGENTA << _options.file_path << CYAN << ':' << COLOR_RESET;
+      } else {
+        _ostream << _options.file_path << ':';
+      }
+    }
     if (_options.line_number) {
       if (_options.color) {
-        _ostream << GREEN << r.line_number << CYAN << ":" << COLOR_RESET;
+        _ostream << GREEN << r.line_number << CYAN << ':' << COLOR_RESET;
       } else {
-        _ostream << r.line_number << ":";
+        _ostream << r.line_number << ':';
       }
     }
     if (_options.byte_offset) {
@@ -61,11 +68,11 @@ void GrepOutput::add(std::vector<GrepPartialResult> partial_result) {
         _ostream << GREEN
                  << (_options.only_matching ? r.byte_offset_match
                                             : r.byte_offset_line)
-                 << CYAN << ":" << COLOR_RESET;
+                 << CYAN << ':' << COLOR_RESET;
       } else {
         _ostream << (_options.only_matching ? r.byte_offset_match
                                             : r.byte_offset_line)
-                 << ":";
+                 << ':';
       }
     }
     if (_options.only_matching) {
