@@ -237,6 +237,10 @@ int main(int argc, char** argv) {
   num_threads = num_threads <= 0 ? max_threads : num_threads;
   num_threads = num_threads > max_threads ? max_threads : num_threads;
 
+  // TODO: fix this: UTF8 is considered to be binary... thus we turn off this
+  //  functionality for now
+  binary_text = true;
+
   // fix number of max readers -------------------------------------------------
   //  a) <= 0 -> num_threads
   num_max_readers = num_max_readers <= 0 ? num_threads : num_max_readers;
@@ -246,9 +250,10 @@ int main(int argc, char** argv) {
     run_on_single_file(grep_options, count, no_mmap, num_threads,
                        num_max_readers, chunk_size, false, meta_file_path);
   } else {
-    grep_options.print_file_path = true;
-    for (const auto& file :
-         get_files(std::filesystem::path(file_path), recursive)) {
+    auto files = get_files(std::filesystem::path(file_path), recursive);
+    // print file, if more than one is searched only
+    grep_options.print_file_path = files.size() > 1;
+    for (const auto& file : files) {
       grep_options.file_path = file;
       run_on_single_file(grep_options, count, no_mmap, num_threads,
                          num_max_readers, chunk_size, binary_text);

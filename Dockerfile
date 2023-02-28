@@ -9,7 +9,7 @@ RUN apt-get install -y apt-utils build-essential git make vim cmake libzstd-dev 
 RUN apt install -y libboost1.74-dev libboost-program-options1.74-dev > /dev/null
 RUN rm -rf /var/lib/apt/lists/*
 
-COPY . xsearch
+COPY . xsgrep
 WORKDIR "xsgrep"
 RUN git submodule update --init --recursive
 RUN make help
