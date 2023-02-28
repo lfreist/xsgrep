@@ -108,7 +108,7 @@ int main(int argc, char** argv) {
 
   // set reader ----------------------------------------------------------------
   auto reader = std::make_unique<xs::task::reader::FileBlockReader>(
-      args.source_file, args.min_chunk_size);
+      args.source_file, args.min_chunk_size, 65536, true);
 
   // set inplace processors ----------------------------------------------------
   std::vector<std::unique_ptr<xs::task::base::InplaceProcessor<xs::DataChunk>>>

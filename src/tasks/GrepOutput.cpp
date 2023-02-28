@@ -1,6 +1,7 @@
 // Copyright 2023, Leon Freist
 // Author: Leon Freist <freist@informatik.uni-freiburg.de>
 
+#include <xsearch/utils/InlineBench.h>
 #include "./GrepOutput.h"
 
 // ===== GrepPartialResult =====================================================
@@ -48,6 +49,7 @@ size_t GrepOutput::size() const { return _lines_written; }
 
 // _____________________________________________________________________________
 void GrepOutput::add(std::vector<GrepPartialResult> partial_result) {
+  INLINE_BENCHMARK_WALL_START(_, "output");
   for (auto& r : partial_result) {
     if (_options.print_file_path) {
       if (_options.color) {

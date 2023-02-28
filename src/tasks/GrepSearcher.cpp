@@ -3,6 +3,8 @@
 
 #include "./GrepSearcher.h"
 
+#include <xsearch/utils/InlineBench.h>
+
 // ----- Helper function -------------------------------------------------------
 // _____________________________________________________________________________
 std::string get_regex_match_(const char* data, size_t size,
@@ -36,6 +38,7 @@ GrepSearcher::GrepSearcher(GrepOptions options) : _options(std::move(options)) {
 // _____________________________________________________________________________
 std::vector<GrepPartialResult> GrepSearcher::process(
     xs::DataChunk* data) const {
+  INLINE_BENCHMARK_WALL_START(_, "search")
   if (_options.regex || (_options.ignore_case && _options.no_ascii)) {
     return process_regex(data);
   }
@@ -137,10 +140,4 @@ std::vector<GrepPartialResult> GrepSearcher::process_plain(
     res[i].str = lines[i];
   }
   return res;
-}
-
-// _____________________________________________________________________________
-std::vector<GrepPartialResult> GrepSearcher::process_utf8(
-    xs::DataChunk* data) const {
-  return {};
 }

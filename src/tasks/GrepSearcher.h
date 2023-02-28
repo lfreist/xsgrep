@@ -29,7 +29,6 @@ class GrepSearcher
  private:
   std::vector<GrepPartialResult> process_regex(xs::DataChunk* data) const;
   std::vector<GrepPartialResult> process_plain(xs::DataChunk* data) const;
-  std::vector<GrepPartialResult> process_utf8(xs::DataChunk* data) const;
 
   /// search for line numbers
   GrepOptions _options;
