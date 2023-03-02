@@ -1,6 +1,6 @@
 {
   "timer": "GNU time",
-  "name": "search lines (literal 'She[r ]lock', ignore case, line number)",
+  "name": "search lines (regex 'She[r ]lock', ignore case, line number)",
   "description": "",
   "commands": {
     "GNU grep": [

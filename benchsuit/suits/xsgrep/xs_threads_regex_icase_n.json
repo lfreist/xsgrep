@@ -6,70 +6,90 @@
     "xs": [
       "xs",
       "She[r ]lock",
-      "en.txt"
+      "en.txt",
+      "-i",
+      "-n"
     ],
     "xs -j 1": [
       "xs",
       "She[r ]lock",
       "en.txt", "-i", "-n",
       "-j",
-      "1"
+      "1",
+      "-i",
+      "-n"
     ],
     "xs -j 2": [
       "xs",
       "She[r ]lock",
       "en.txt", "-i", "-n",
       "-j",
-      "2"
+      "2",
+      "-i",
+      "-n"
     ],
     "xs -j 4": [
       "xs",
       "She[r ]lock",
       "en.txt", "-i", "-n",
       "-j",
-      "4"
+      "4",
+      "-i",
+      "-n"
     ],
     "xs -j 6": [
       "xs",
       "She[r ]lock",
       "en.txt", "-i", "-n",
       "-j",
-      "6"
+      "6",
+      "-i",
+      "-n"
     ],
     "xs -j 8": [
       "xs",
       "She[r ]lock",
       "en.txt", "-i", "-n",
       "-j",
-      "8"
+      "8",
+      "-i",
+      "-n"
     ],
     "xs -j 10": [
       "xs",
       "She[r ]lock",
       "en.txt", "-i", "-n",
       "-j",
-      "10"
+      "10",
+      "-i",
+      "-n"
     ],
     "xs -j 12": [
       "xs",
       "She[r ]lock",
       "en.txt", "-i", "-n",
       "-j",
-      "12"
+      "12",
+      "-i",
+      "-n"
     ],
     "xs -j 14": [
       "xs",
       "She[r ]lock",
       "en.txt", "-i", "-n",
       "-j",
-      "14"
+      "14",
+      "-i",
+      "-n"
     ],
     "xs -j 16": [
       "xs",
       "She[r ]lock",
       "en.txt", "-i", "-n",
       "-j",
-      "16"
+      "16",
+      "-i",
+      "-n"
     ]
   },
   "setup_cmd": [],
