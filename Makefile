@@ -49,8 +49,8 @@ check_style:
 benchmark: build_benchmark
 
 install: build
-	sudo cp build/src/xs /usr/bin/xs
-	sudo cp build/src/xspp/xspp /usr/bin/xspp
+	cp build/src/xs ~/.local/bin/xs
+	cp build/src/xspp/xspp ~/.local/bin/xspp
 
 clean:
 	rm -rf build
