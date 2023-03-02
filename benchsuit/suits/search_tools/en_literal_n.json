@@ -1,0 +1,35 @@
+{
+  "timer": "GNU time",
+  "name": "search lines (literal 'Sherlock', line number)",
+  "description": "",
+  "commands": {
+    "GNU grep": [
+      "grep",
+      "Sherlock",
+      "en.txt",
+      "-n"
+    ],
+    "ripgrep": [
+      "rg",
+      "Sherlock",
+      "en.txt",
+      "-n"
+    ],
+    "xs grep -j 1": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-j",
+      "1",
+      "-n"
+    ],
+    "xs grep": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-n"
+    ]
+  },
+  "setup_cmd": [],
+  "cleanup_cmd": []
+}

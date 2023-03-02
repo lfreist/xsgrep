@@ -1,0 +1,35 @@
+{
+  "timer": "GNU time",
+  "name": "search lines (literal 'She[r ]lock', ignore case)",
+  "description": "",
+  "commands": {
+    "GNU grep": [
+      "grep",
+      "She[r ]lock",
+      "es.txt",
+      "-i"
+    ],
+    "ripgrep": [
+      "rg",
+      "She[r ]lock",
+      "es.txt",
+      "-i"
+    ],
+    "xs grep -j 1": [
+      "xs",
+      "She[r ]lock",
+      "es.txt",
+      "-j",
+      "1",
+      "-i"
+    ],
+    "xs grep": [
+      "xs",
+      "She[r ]lock",
+      "es.txt",
+      "-i"
+    ]
+  },
+  "setup_cmd": [],
+  "cleanup_cmd": []
+}

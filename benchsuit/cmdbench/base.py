@@ -53,29 +53,6 @@ def get_cpu_name() -> str:
                 return re.sub(".*model name.*:", "", line, 1).strip()
 
 
-def has_root_privileges() -> bool:
-    """
-    Return boolean indicating whether the user running this script has root privileges
-    :return:
-    """
-    return os.geteuid() == 0 or os.system("sudo -n true 2>/dev/null") == 0
-
-
-def drop_ram_cache() -> None:
-    """
-    Drop systems RAM cache (only unix systems) or raise PermissionError if access is denied
-    :return:
-    """
-    if has_root_privileges():
-        subprocess.run("sync")
-        with open("/proc/sys/vm/drop_caches", "w") as f:
-            f.write("3")
-        # give the system some time to recover...
-        time.sleep(1)
-    else:
-        raise PermissionError("Cannot drop RAM caches as non root")
-
-
 # ===== Base Classes ===================================================================================================
 class CommandResult(ABC):
     """
@@ -133,9 +110,7 @@ class Command:
             return self.cmd.split(' ')[0]
         return self.cmd[0]
 
-    def run(self, drop_cache: bool = False) -> CommandResult | None:
-        if drop_cache:
-            drop_ram_cache()
+    def run(self) -> CommandResult | None:
         proc = subprocess.Popen(self.cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                                 shell=(type(self.cmd) == str))
         proc.wait()
@@ -206,7 +181,7 @@ class BenchmarkResult(ABC):
 
 class Benchmark(ABC):
     def __init__(self, name: str, commands: List[Command], setup_commands: List[Command] = None,
-                 cleanup_commands: List[Command] = None, iterations: int = 3, drop_cache: bool = False):
+                 cleanup_commands: List[Command] = None, iterations: int = 3, drop_cache: Command | None = None):
         self.name = name
         self.commands = commands
         self.setup_commands = setup_commands if setup_commands is not None else []

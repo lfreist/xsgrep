@@ -84,15 +84,10 @@ class InlineBenchResult(cmdbench.CommandResult):
 
 
 class InlineBenchCommand(cmdbench.Command):
-    def __init__(self, name: str, cmd: List[str] | str, pre_commands: List[cmdbench.Command] = None):
+    def __init__(self, name: str, cmd: List[str] | str):
         cmdbench.Command.__init__(self, name, cmd)
-        self.pre_commands = pre_commands if pre_commands is not None else []
 
-    def run(self, drop_cache: bool = False) -> InlineBenchResult | None:
-        for cmd in self.pre_commands:
-            cmd.run()
-        if drop_cache:
-            cmdbench.drop_ram_cache()
+    def run(self) -> InlineBenchResult | None:
         out = subprocess.Popen(self.cmd, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE,
                                shell=(type(self.cmd) == str)).communicate()[1]
         out = out.decode()
@@ -181,13 +176,18 @@ class InlineBenchBenchmarkResult(cmdbench.BenchmarkResult):
 
 class InlineBenchBenchmark(cmdbench.Benchmark):
     def __init__(self, name: str, commands: List[InlineBenchCommand], setup_commands: List[cmdbench.Command] = None,
-                 cleanup_commands: List[cmdbench.Command] = None, iterations: int = 3, drop_cache: bool = False):
+                 cleanup_commands: List[cmdbench.Command] = None, iterations: int = 3,
+                 drop_cache: cmdbench.Command | None = None):
         cmdbench.Benchmark.__init__(self, name, commands, setup_commands, cleanup_commands, iterations, drop_cache)
 
     def _run_benchmarks(self) -> InlineBenchBenchmarkResult:
         result = InlineBenchBenchmarkResult(self.name)
         for iteration in range(self.iterations):
             for cmd in self.commands:
+                if self.drop_cache is None:
+                    cmd.run()
+                else:
+                    self.drop_cache.run()
                 cmdbench.log(f"  {iteration}/{self.iterations}: {cmd.name}", end='\r', flush=True)
                 part_res = cmd.run(self.drop_cache)
                 if part_res is not None:

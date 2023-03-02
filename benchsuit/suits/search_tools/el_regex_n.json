@@ -1,0 +1,35 @@
+{
+  "timer": "GNU time",
+  "name": "search lines (literal 'Σέρ[λοκ]', line numbers)",
+  "description": "",
+  "commands": {
+    "GNU grep": [
+      "grep",
+      "Σέρ[λοκ]",
+      "es.txt",
+      "-n"
+    ],
+    "ripgrep": [
+      "rg",
+      "Σέρ[λοκ]",
+      "es.txt",
+      "-n"
+    ],
+    "xs grep -j 1": [
+      "xs",
+      "Σέρ[λοκ]",
+      "es.txt",
+      "-j",
+      "1",
+      "-n"
+    ],
+    "xs grep": [
+      "xs",
+      "Σέρ[λοκ]",
+      "es.txt",
+      "-n"
+    ]
+  },
+  "setup_cmd": [],
+  "cleanup_cmd": []
+}

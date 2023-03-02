@@ -1,0 +1,39 @@
+{
+  "timer": "GNU time",
+  "name": "search lines (literal 'Σέρλοκ', ignore case, line number)",
+  "description": "",
+  "commands": {
+    "GNU grep": [
+      "grep",
+      "Σέρλοκ",
+      "es.txt",
+      "-i",
+      "-n"
+    ],
+    "ripgrep": [
+      "rg",
+      "Σέρλοκ",
+      "es.txt",
+      "-i",
+      "-n"
+    ],
+    "xs grep -j 1": [
+      "xs",
+      "Σέρλοκ",
+      "es.txt",
+      "-j",
+      "1",
+      "-i",
+      "-n"
+    ],
+    "xs grep": [
+      "xs",
+      "Σέρλοκ",
+      "es.txt",
+      "-i",
+      "-n"
+    ]
+  },
+  "setup_cmd": [],
+  "cleanup_cmd": []
+}

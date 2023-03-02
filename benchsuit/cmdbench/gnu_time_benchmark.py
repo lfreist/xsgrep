@@ -64,22 +64,17 @@ class GNUTimeResult(cmdbench.CommandResult):
 
 
 class GNUTimeCommand(cmdbench.Command):
-    def __init__(self, name: str, cmd: List[str] | str, pre_commands: List[cmdbench.Command] = None):
+    def __init__(self, name: str, cmd: List[str] | str):
         cmdbench.Command.__init__(self, name, cmd)
-        self.pre_commands = pre_commands if pre_commands is not None else []
 
     def _timed_command(self) -> List[str] | str:
         if type(self.cmd) == str:
             return f"/usr/bin/time -f '%e\t%U\t%S' {self.cmd}"
         return ["/usr/bin/time", "-f", "%e\t%U\t%S"] + self.cmd
 
-    def run(self, drop_cache: bool = False) -> GNUTimeResult | None:
-        for cmd in self.pre_commands:
-            cmd.run()
-        if drop_cache:
-            cmdbench.drop_ram_cache()
+    def run(self) -> GNUTimeResult | None:
         tmp_file = tempfile.TemporaryFile()
-        out = subprocess.Popen(self._timed_command(), stdout=tmp_file, stderr=subprocess.PIPE,
+        out = subprocess.Popen(self._timed_command(), stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                shell=(type(self.cmd) == str)).communicate()[1]
         tmp_file.close()
         out = out.decode()
@@ -142,13 +137,18 @@ class GNUTimeBenchmarkResult(cmdbench.BenchmarkResult):
 
 class GNUTimeBenchmark(cmdbench.Benchmark):
     def __init__(self, name: str, commands: List[GNUTimeCommand], setup_commands: List[cmdbench.Command] = None,
-                 cleanup_commands: List[cmdbench.Command] = None, iterations: int = 3, drop_cache: bool = False):
+                 cleanup_commands: List[cmdbench.Command] = None, iterations: int = 3,
+                 drop_cache: cmdbench.Command | None = None):
         cmdbench.Benchmark.__init__(self, name, commands, setup_commands, cleanup_commands, iterations, drop_cache)
 
     def _run_benchmarks(self) -> GNUTimeBenchmarkResult:
         result = GNUTimeBenchmarkResult(self.name)
         for iteration in range(self.iterations):
             for cmd in self.commands:
+                if self.drop_cache is None:
+                    cmd.run()
+                else:
+                    self.drop_cache.run()
                 cmdbench.log(f"  {iteration}/{self.iterations}: {cmd.name}", end='\r', flush=True)
                 part_res = cmd.run(self.drop_cache)
                 if part_res:
