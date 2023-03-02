@@ -13,7 +13,7 @@
     "xs -j 1": [
       "xs",
       "She[r ]lock",
-      "en.txt", "-i", "-n",
+      "en.txt",
       "-j",
       "1",
       "-i",
@@ -22,7 +22,7 @@
     "xs -j 2": [
       "xs",
       "She[r ]lock",
-      "en.txt", "-i", "-n",
+      "en.txt",
       "-j",
       "2",
       "-i",
@@ -31,7 +31,7 @@
     "xs -j 4": [
       "xs",
       "She[r ]lock",
-      "en.txt", "-i", "-n",
+      "en.txt",
       "-j",
       "4",
       "-i",
@@ -40,7 +40,7 @@
     "xs -j 6": [
       "xs",
       "She[r ]lock",
-      "en.txt", "-i", "-n",
+      "en.txt",
       "-j",
       "6",
       "-i",
@@ -49,7 +49,7 @@
     "xs -j 8": [
       "xs",
       "She[r ]lock",
-      "en.txt", "-i", "-n",
+      "en.txt",
       "-j",
       "8",
       "-i",
@@ -58,7 +58,7 @@
     "xs -j 10": [
       "xs",
       "She[r ]lock",
-      "en.txt", "-i", "-n",
+      "en.txt",
       "-j",
       "10",
       "-i",
@@ -67,7 +67,7 @@
     "xs -j 12": [
       "xs",
       "She[r ]lock",
-      "en.txt", "-i", "-n",
+      "en.txt",
       "-j",
       "12",
       "-i",
@@ -76,7 +76,7 @@
     "xs -j 14": [
       "xs",
       "She[r ]lock",
-      "en.txt", "-i", "-n",
+      "en.txt",
       "-j",
       "14",
       "-i",
@@ -85,7 +85,7 @@
     "xs -j 16": [
       "xs",
       "She[r ]lock",
-      "en.txt", "-i", "-n",
+      "en.txt",
       "-j",
       "16",
       "-i",
