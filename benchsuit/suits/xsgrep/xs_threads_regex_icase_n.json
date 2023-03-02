@@ -1,0 +1,77 @@
+{
+  "timer": "GNU time",
+  "name": "xsgrep threads (regex, case insensitive, line number)",
+  "description": "",
+  "commands": {
+    "xs": [
+      "xs",
+      "She[r ]lock",
+      "en.txt"
+    ],
+    "xs -j 1": [
+      "xs",
+      "She[r ]lock",
+      "en.txt", "-i", "-n",
+      "-j",
+      "1"
+    ],
+    "xs -j 2": [
+      "xs",
+      "She[r ]lock",
+      "en.txt", "-i", "-n",
+      "-j",
+      "2"
+    ],
+    "xs -j 4": [
+      "xs",
+      "She[r ]lock",
+      "en.txt", "-i", "-n",
+      "-j",
+      "4"
+    ],
+    "xs -j 6": [
+      "xs",
+      "She[r ]lock",
+      "en.txt", "-i", "-n",
+      "-j",
+      "6"
+    ],
+    "xs -j 8": [
+      "xs",
+      "She[r ]lock",
+      "en.txt", "-i", "-n",
+      "-j",
+      "8"
+    ],
+    "xs -j 10": [
+      "xs",
+      "She[r ]lock",
+      "en.txt", "-i", "-n",
+      "-j",
+      "10"
+    ],
+    "xs -j 12": [
+      "xs",
+      "She[r ]lock",
+      "en.txt", "-i", "-n",
+      "-j",
+      "12"
+    ],
+    "xs -j 14": [
+      "xs",
+      "She[r ]lock",
+      "en.txt", "-i", "-n",
+      "-j",
+      "14"
+    ],
+    "xs -j 16": [
+      "xs",
+      "She[r ]lock",
+      "en.txt", "-i", "-n",
+      "-j",
+      "16"
+    ]
+  },
+  "setup_cmd": [],
+  "cleanup_cmd": []
+}

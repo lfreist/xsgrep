@@ -93,9 +93,10 @@ class Command:
     Base class of a command. Represents a single command together with a user chosen name describing the command
     """
 
-    def __init__(self, name: str, cmd: List[str] | str):
+    def __init__(self, name: str, cmd: List[str] | str, cwd: str | None = None):
         self.name = name
         self.cmd = cmd
+        self.cwd = cwd
 
     def __str__(self):
         if type(self.cmd) == str:
@@ -112,7 +113,7 @@ class Command:
 
     def run(self) -> CommandResult | None:
         proc = subprocess.Popen(self.cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-                                shell=(type(self.cmd) == str))
+                                shell=(type(self.cmd) == str), cwd=self.cwd)
         proc.wait()
         return
 

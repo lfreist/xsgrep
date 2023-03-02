@@ -8,16 +8,18 @@ import platform
 import statistics
 import subprocess
 
-import cmdbench
+from base import (Command, CommandResult, CommandFailedError, InvalidCommandError, BenchmarkResult, Benchmark,
+                  get_cpu_name, log)
+
 from typing import List, Tuple
 import tempfile
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 
-class GNUTimeResult(cmdbench.CommandResult):
+class GNUTimeResult(CommandResult):
     def __init__(self, command, wall_s: float, usr_cpu_s: float, sys_cpu_s: float):
-        cmdbench.CommandResult.__init__(self, command)
+        CommandResult.__init__(self, command)
         self.wall_s = [wall_s]
         self.usr_cpu_s = [usr_cpu_s]
         self.sys_cpu_s = [sys_cpu_s]
@@ -63,9 +65,9 @@ class GNUTimeResult(cmdbench.CommandResult):
             self["cpu"]) == statistics.mean(other["cpu"])
 
 
-class GNUTimeCommand(cmdbench.Command):
-    def __init__(self, name: str, cmd: List[str] | str):
-        cmdbench.Command.__init__(self, name, cmd)
+class GNUTimeCommand(Command):
+    def __init__(self, name: str, cmd: List[str] | str, cwd: str | None = None):
+        Command.__init__(self, name, cmd, cwd)
 
     def _timed_command(self) -> List[str] | str:
         if type(self.cmd) == str:
@@ -75,7 +77,7 @@ class GNUTimeCommand(cmdbench.Command):
     def run(self) -> GNUTimeResult | None:
         tmp_file = tempfile.TemporaryFile()
         out = subprocess.Popen(self._timed_command(), stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                               shell=(type(self.cmd) == str)).communicate()[1]
+                               shell=(type(self.cmd) == str), cwd=self.cwd).communicate()[1]
         tmp_file.close()
         out = out.decode()
         wall, usr_cpu, sys_cpu = out.split('\t')
@@ -85,15 +87,17 @@ class GNUTimeCommand(cmdbench.Command):
             return None
 
 
-class GNUTimeBenchmarkResult(cmdbench.BenchmarkResult):
+class GNUTimeBenchmarkResult(BenchmarkResult):
     def __init__(self, benchmark_name: str):
-        cmdbench.BenchmarkResult.__init__(self, benchmark_name)
+        BenchmarkResult.__init__(self, benchmark_name)
 
     def plot(self, path: str = "") -> None:
         mpl.style.use("seaborn-v0_8")
         fig, axs = plt.subplots(1, 2, figsize=(8, 10))
-        self._add_subplot(axs[0], "Wall Time [s]", self._get_plot_data("wall"))
-        self._add_subplot(axs[1], "CPU Time [s]", self._get_plot_data("cpu"))
+        fig.suptitle(self.benchmark_name, fontsize=16)
+        self._add_subplot(axs[0], "Wall Time", self._get_plot_data("wall"))
+        self._add_subplot(axs[1], "CPU Time", self._get_plot_data("cpu"))
+        axs[0].set_ylabel("Time [s]")
         plt.tight_layout()
         if path:
             plt.savefig(path, format="pdf")
@@ -102,7 +106,6 @@ class GNUTimeBenchmarkResult(cmdbench.BenchmarkResult):
 
     @staticmethod
     def _add_subplot(axs, title: str, data: List[Tuple[str, float, float]]) -> None:
-        data.sort(key=lambda v: v[0])  # sort by x label (cmd name) so that we get the same order in all subplots
         x = []
         y = []
         y_err = []
@@ -135,11 +138,11 @@ class GNUTimeBenchmarkResult(cmdbench.BenchmarkResult):
         return ret
 
 
-class GNUTimeBenchmark(cmdbench.Benchmark):
-    def __init__(self, name: str, commands: List[GNUTimeCommand], setup_commands: List[cmdbench.Command] = None,
-                 cleanup_commands: List[cmdbench.Command] = None, iterations: int = 3,
-                 drop_cache: cmdbench.Command | None = None):
-        cmdbench.Benchmark.__init__(self, name, commands, setup_commands, cleanup_commands, iterations, drop_cache)
+class GNUTimeBenchmark(Benchmark):
+    def __init__(self, name: str, commands: List[GNUTimeCommand], setup_commands: List[Command] = None,
+                 cleanup_commands: List[Command] = None, iterations: int = 3,
+                 drop_cache: Command | None = None):
+        Benchmark.__init__(self, name, commands, setup_commands, cleanup_commands, iterations, drop_cache)
 
     def _run_benchmarks(self) -> GNUTimeBenchmarkResult:
         result = GNUTimeBenchmarkResult(self.name)
@@ -149,9 +152,9 @@ class GNUTimeBenchmark(cmdbench.Benchmark):
                     cmd.run()
                 else:
                     self.drop_cache.run()
-                cmdbench.log(f"  {iteration}/{self.iterations}: {cmd.name}", end='\r', flush=True)
-                part_res = cmd.run(self.drop_cache)
+                log(f"  {iteration}/{self.iterations}: {cmd.name}", end='\r', flush=True)
+                part_res = cmd.run()
                 if part_res:
                     result += part_res
-        cmdbench.log()
+        log()
         return result

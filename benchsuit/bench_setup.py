@@ -4,6 +4,11 @@ import requests
 import argparse
 
 
+def log(*args, **kwargs):
+    print(80 * " ", end='\r', flush=True)
+    print(*args, **kwargs)
+
+
 def download(url: str, dest: str) -> None:
     """
     Download url to dest
@@ -11,8 +16,9 @@ def download(url: str, dest: str) -> None:
     with open(dest, "wb") as f:
         data = requests.get(url, stream=True)
         num_bytes_read = 0
+        name = dest.split('/')[-1]
         for chunk in data.iter_content(chunk_size=32768):
-            print(f"{num_bytes_read / 1000000:.2f} MiB written", end='\r', flush=True)
+            log(f"{dest}: {num_bytes_read / 1000000:.2f} MiB written", end='\r', flush=True)
             f.write(chunk)
             num_bytes_read += len(chunk)
         print()
@@ -22,9 +28,9 @@ def decompress(file_path: str) -> None:
     """
     decompress file_path using gunzip
     """
-    print(f"Decompressing {file_path}...", end='\r', flush=True)
+    log(f"Decompressing {file_path}...", end='\r', flush=True)
     subprocess.Popen(["gunzip", file_path]).communicate()
-    print("Decompression done.                                                             ")
+    log("Decompression done.")
 
 
 if __name__ == "__main__":
@@ -35,8 +41,8 @@ if __name__ == "__main__":
 
     URLs = [
         "https://object.pouta.csc.fi/OPUS-OpenSubtitles/v2016/mono/en.txt.gz",  # english, plain ASCII
-        "https://object.pouta.csc.fi/OPUS-OpenSubtitles/v2016/mono/el.txt.gz",  # greek, pure UTF-8 multi char
-        "https://object.pouta.csc.fi/OPUS-OpenSubtitles/v2016/mono/es.txt.gz",  # spanish, mixed
+        # "https://object.pouta.csc.fi/OPUS-OpenSubtitles/v2016/mono/el.txt.gz",  # greek, pure UTF-8 multi char
+        # "https://object.pouta.csc.fi/OPUS-OpenSubtitles/v2016/mono/es.txt.gz",  # spanish, mixed
     ]
 
     if not os.path.exists(args.dir):

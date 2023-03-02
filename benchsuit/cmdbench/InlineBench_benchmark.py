@@ -8,7 +8,8 @@ import json
 import statistics
 import subprocess
 
-import cmdbench
+from base import (Command, CommandResult, CommandFailedError, InvalidCommandError, BenchmarkResult, Benchmark, log,
+                  get_cpu_name)
 
 from typing import List, Tuple
 import matplotlib as mpl
@@ -16,9 +17,9 @@ import matplotlib.pyplot as plt
 import math
 
 
-class InlineBenchResult(cmdbench.CommandResult):
+class InlineBenchResult(CommandResult):
     def __init__(self, command, data: dict):
-        cmdbench.CommandResult.__init__(self, command)
+        CommandResult.__init__(self, command)
         self.data = self._normalize_data(data)
 
     def _normalize_data(self, data: dict) -> dict:
@@ -83,13 +84,13 @@ class InlineBenchResult(cmdbench.CommandResult):
         return True
 
 
-class InlineBenchCommand(cmdbench.Command):
-    def __init__(self, name: str, cmd: List[str] | str):
-        cmdbench.Command.__init__(self, name, cmd)
+class InlineBenchCommand(Command):
+    def __init__(self, name: str, cmd: List[str] | str, cwd: str | None = None):
+        Command.__init__(self, name, cmd, cwd)
 
     def run(self) -> InlineBenchResult | None:
         out = subprocess.Popen(self.cmd, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE,
-                               shell=(type(self.cmd) == str)).communicate()[1]
+                               shell=(type(self.cmd) == str), cwd=self.cwd).communicate()[1]
         out = out.decode()
         try:
             data = json.loads(out)
@@ -99,13 +100,13 @@ class InlineBenchCommand(cmdbench.Command):
             return None
 
 
-class InlineBenchBenchmarkResult(cmdbench.BenchmarkResult):
+class InlineBenchBenchmarkResult(BenchmarkResult):
     def __init__(self, benchmark_name: str):
-        cmdbench.BenchmarkResult.__init__(self, benchmark_name)
+        BenchmarkResult.__init__(self, benchmark_name)
 
     def plot(self, path: str = "") -> None:
         if not self.results:
-            cmdbench.log("No results were collected...")
+            log("No results were collected...")
             return
         mpl.style.use("seaborn-v0_8")
         num_tasks = len((self.results[list(self.results.keys())[0]].data["Wall"].keys()))
@@ -121,6 +122,7 @@ class InlineBenchBenchmarkResult(cmdbench.BenchmarkResult):
             rows = 2
         columns = math.ceil(columns / rows)
         fig, axs = plt.subplots(rows, columns, figsize=fig_size, sharex="all")
+        fig.suptitle(self.benchmark_name, fontsize=16)
         y = rows - 1
         x = 0
         for task in self.results[list(self.results.keys())[0]].data["Wall"].keys():
@@ -174,11 +176,11 @@ class InlineBenchBenchmarkResult(cmdbench.BenchmarkResult):
         return ret
 
 
-class InlineBenchBenchmark(cmdbench.Benchmark):
-    def __init__(self, name: str, commands: List[InlineBenchCommand], setup_commands: List[cmdbench.Command] = None,
-                 cleanup_commands: List[cmdbench.Command] = None, iterations: int = 3,
-                 drop_cache: cmdbench.Command | None = None):
-        cmdbench.Benchmark.__init__(self, name, commands, setup_commands, cleanup_commands, iterations, drop_cache)
+class InlineBenchBenchmark(Benchmark):
+    def __init__(self, name: str, commands: List[InlineBenchCommand], setup_commands: List[Command] = None,
+                 cleanup_commands: List[Command] = None, iterations: int = 3,
+                 drop_cache: Command | None = None):
+        Benchmark.__init__(self, name, commands, setup_commands, cleanup_commands, iterations, drop_cache)
 
     def _run_benchmarks(self) -> InlineBenchBenchmarkResult:
         result = InlineBenchBenchmarkResult(self.name)
@@ -188,9 +190,9 @@ class InlineBenchBenchmark(cmdbench.Benchmark):
                     cmd.run()
                 else:
                     self.drop_cache.run()
-                cmdbench.log(f"  {iteration}/{self.iterations}: {cmd.name}", end='\r', flush=True)
+                log(f"  {iteration}/{self.iterations}: {cmd.name}", end='\r', flush=True)
                 part_res = cmd.run(self.drop_cache)
                 if part_res is not None:
                     result += part_res
-        cmdbench.log()
+        log()
         return result
