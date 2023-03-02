@@ -84,7 +84,7 @@ def main(conf_file: str, cwd: str | None) -> None:
         bm.drop_cache = base.Command("drop cache", cmd=[args.drop_cache])
     else:
         bm.drop_cache = None
-    gnutime.log(f" Running {bm.name}...", flush=True, end='\r')
+    gnutime.log(f" Running {bm.name}...")
     result = bm.run()
     if args.output:
         if not os.path.exists(args.output):
@@ -106,7 +106,6 @@ def main(conf_file: str, cwd: str | None) -> None:
         result.plot(output_file + ".pdf")
     else:
         result.plot()
-    gnutime.log()
 
 
 if __name__ == "__main__":
