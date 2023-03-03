@@ -8,40 +8,25 @@
       "Sherlock",
       "en.txt"
     ],
-    "xs --mmap": [
+    "xs --no-mmap": [
       "xs",
       "Sherlock",
       "en.txt",
       "--no-mmap"
     ],
-    "xs -j 2": [
+    "xs -j 1": [
       "xs",
       "Sherlock",
       "en.txt",
       "-j",
       "2"
     ],
-    "xs --mmap -j 2": [
+    "xs --no-mmap -j 1": [
       "xs",
       "Sherlock",
       "en.txt",
       "-j",
       "2",
-      "--no-mmap"
-    ],
-    "xs -j 4": [
-      "xs",
-      "Sherlock",
-      "en.txt",
-      "-j",
-      "4"
-    ],
-    "xs --mmap -j 4": [
-      "xs",
-      "Sherlock",
-      "en.txt",
-      "-j",
-      "4",
       "--no-mmap"
     ]
   },
