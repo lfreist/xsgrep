@@ -100,8 +100,8 @@ class Command:
 
     def __str__(self):
         if type(self.cmd) == str:
-            return f"{self.name}: {self.cmd}"
-        return f"{self.name}: {' '.join(self.cmd)}"
+            return f"{self.name}: '{self.cmd}'"
+        return f"{self.name}: '{' '.join(self.cmd)}'"
 
     def exists(self) -> bool:
         return shutil.which(self._get_binary_name()) is not None
