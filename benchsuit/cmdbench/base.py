@@ -112,7 +112,6 @@ class Command:
         return self.cmd[0]
 
     def run(self) -> CommandResult | None:
-    def run(self) -> CommandResult | None:
         proc = subprocess.Popen(self.cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                                 shell=(type(self.cmd) == str), cwd=self.cwd)
         proc.wait()
