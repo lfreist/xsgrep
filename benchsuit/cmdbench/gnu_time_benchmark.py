@@ -152,7 +152,7 @@ class GNUTimeBenchmark(Benchmark):
                     cmd.run()
                 else:
                     self.drop_cache.run()
-                log(f"  {iteration}/{self.iterations}: {cmd.name}", end='\r', flush=True)
+                log(f"  {iteration}/{self.iterations}: {cmd.name} ('{cmd}')", end='\r', flush=True)
                 part_res = cmd.run()
                 if part_res:
                     result += part_res
