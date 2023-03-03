@@ -1,0 +1,50 @@
+{
+  "timer": "GNU time",
+  "name": "xsgrep mmap vs std::ifstream::read",
+  "description": "",
+  "commands": {
+    "xs": [
+      "xs",
+      "Sherlock",
+      "en.txt"
+    ],
+    "xs --mmap": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "--no-mmap"
+    ],
+    "xs -j 2": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-j",
+      "2"
+    ],
+    "xs --mmap -j 2": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-j",
+      "2",
+      "--no-mmap"
+    ],
+    "xs -j 4": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-j",
+      "4"
+    ],
+    "xs --mmap -j 4": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-j",
+      "4",
+      "--no-mmap"
+    ]
+  },
+  "setup_cmd": [],
+  "cleanup_cmd": []
+}
