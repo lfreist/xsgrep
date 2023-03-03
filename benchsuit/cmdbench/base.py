@@ -165,7 +165,7 @@ class BenchmarkResult(ABC):
         """
         data = {
             "setup": self.get_setup(),
-            "results": {name: res.get_data() for name, res in self.results.items()}
+            "results": {name: {"data": res.get_data(), "command": str(res.command.command)} for name, res in self.results.items()}
         }
         with open(path, "w") as out:
             out.write(json.dumps(data))

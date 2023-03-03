@@ -28,6 +28,12 @@
       "She[r ]lock",
       "en.txt",
       "-i"
+    ],
+    "xs grep --no-mmap": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "--no-mmap"
     ]
   },
   "setup_cmd": [],
