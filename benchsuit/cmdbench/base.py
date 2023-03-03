@@ -112,6 +112,7 @@ class Command:
         return self.cmd[0]
 
     def run(self) -> CommandResult | None:
+    def run(self) -> CommandResult | None:
         proc = subprocess.Popen(self.cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                                 shell=(type(self.cmd) == str), cwd=self.cwd)
         proc.wait()
@@ -165,7 +166,7 @@ class BenchmarkResult(ABC):
         """
         data = {
             "setup": self.get_setup(),
-            "results": {name: {"data": res.get_data(), "command": str(res.command.command)} for name, res in self.results.items()}
+            "results": {name: {"data": res.get_data(), "command": str(res.command.cmd)} for name, res in self.results.items()}
         }
         with open(path, "w") as out:
             out.write(json.dumps(data))
