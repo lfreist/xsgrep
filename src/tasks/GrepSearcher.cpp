@@ -95,6 +95,7 @@ std::vector<GrepPartialResult> GrepSearcher::process_plain(
   std::string pattern = _options.pattern;
   if (_options.ignore_case) {
     tmp_chunk = xs::DataChunk(*data);
+    // std::transform(data->data(), data->data() + data->size(), tmp_chunk.data(), ::tolower);
     xs::utils::str::simd::toLower(tmp_chunk.data(), tmp_chunk.size());
     op_chunk = &tmp_chunk;
     std::transform(_options.pattern.begin(), _options.pattern.end(),

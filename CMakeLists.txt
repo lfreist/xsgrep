@@ -18,3 +18,6 @@ add_subdirectory(x-search)
 include_directories(x-search/include)
 
 add_subdirectory(src)
+
+add_executable(dummy dummy.cpp)
+target_link_libraries(dummy xsearch)
