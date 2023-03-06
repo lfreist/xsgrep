@@ -38,7 +38,7 @@ GrepSearcher::GrepSearcher(GrepOptions options) : _options(std::move(options)) {
 // _____________________________________________________________________________
 std::vector<GrepPartialResult> GrepSearcher::process(
     xs::DataChunk* data) const {
-  INLINE_BENCHMARK_WALL_START(_, "search")
+  INLINE_BENCHMARK_WALL_START(_, "search");
   if (_options.regex || (_options.ignore_case && _options.no_ascii)) {
     return process_regex(data);
   }
