@@ -72,8 +72,6 @@ struct GrepOptions {
   bool only_matching = false;
   bool ignore_case = true;
   bool no_ascii = false;
-  bool print_file_path = false;
-  std::string file_path;
   std::string pattern;
 };
 

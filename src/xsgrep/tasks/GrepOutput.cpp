@@ -52,13 +52,6 @@ size_t GrepOutput::size() const { return _lines_written; }
 void GrepOutput::add(std::vector<GrepPartialResult> partial_result) {
   INLINE_BENCHMARK_WALL_START(_, "output");
   for (auto& r : partial_result) {
-    if (_options.print_file_path) {
-      if (_options.color) {
-        _ostream << MAGENTA << _options.file_path << CYAN << ':' << COLOR_RESET;
-      } else {
-        _ostream << _options.file_path << ':';
-      }
-    }
     if (_options.line_number) {
       if (_options.color) {
         _ostream << GREEN << r.line_number << CYAN << ':' << COLOR_RESET;
