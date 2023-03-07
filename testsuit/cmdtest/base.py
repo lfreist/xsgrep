@@ -134,16 +134,18 @@ class TestSuit:
         return self.name
 
     def _setup(self):
-        log("  ⏳ Setting things up...")
-        for cmd in self.setup_commands:
-            cmd.run()
-        log("  ✅ Setup done")
+        if self.setup_commands:
+            log("  ⏳ Setting things up...")
+            for cmd in self.setup_commands:
+                cmd.run()
+            log("  ✅ Setup done")
 
     def _cleanup(self):
-        log("  ⏳ Cleaning...")
-        for cmd in self.cleanup_commands:
-            cmd.run()
-        log("  ✅ Cleanup done")
+        if self.cleanup_commands:
+            log("  ⏳ Cleaning...")
+            for cmd in self.cleanup_commands:
+                cmd.run()
+            log("  ✅ Cleanup done")
 
     def run(self) -> TestResult:
         self._setup()

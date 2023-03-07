@@ -48,9 +48,12 @@ check_style:
 
 benchmark: build_benchmark
 
+
 install: build
-	cp build/src/xs ~/.local/bin/xs
-	cp build/src/xspp/xspp ~/.local/bin/xspp
+	bash scripts/install.sh
+
+uninstall:
+	bash scripts/uninstall.sh
 
 clean:
 	rm -rf build
