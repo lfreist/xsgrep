@@ -5,10 +5,11 @@
 
 #include <unistd.h>
 #include <xsearch/xsearch.h>
-#include "../grep.h"
 
 #include <cstdio>
 #include <memory>
+
+#include "../grep.h"
 
 // ===== Output colors =========================================================
 #define COLOR_RESET "\033[0m"
@@ -34,8 +35,7 @@
  * GrepOutput: The actual result class that inherits xs::BaseResult.
  *  It collects vectors of GrepPartialResults.
  */
-class GrepOutput
-    : public xs::result::base::Result<std::vector<Grep::Match>> {
+class GrepOutput : public xs::result::base::Result<std::vector<Grep::Match>> {
  public:
   explicit GrepOutput(Grep::Options options, std::ostream& ostream = std::cout);
 

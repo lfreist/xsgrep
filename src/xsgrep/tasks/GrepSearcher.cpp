@@ -44,8 +44,7 @@ GrepSearcher::GrepSearcher(std::string pattern, bool byte_offset,
 }
 
 // _____________________________________________________________________________
-std::vector<Grep::Match> GrepSearcher::process(
-    xs::DataChunk* data) const {
+std::vector<Grep::Match> GrepSearcher::process(xs::DataChunk* data) const {
   INLINE_BENCHMARK_WALL_START(_, "search");
   if (_regex || (_ignore_case && _locale != Grep::Locale::ASCII)) {
     return process_regex(data);
@@ -87,7 +86,8 @@ std::vector<Grep::Match> GrepSearcher::process_regex(
 
   std::vector<Grep::Match> res(byte_offsets.size());
   for (uint64_t i = 0; i < byte_offsets.size(); ++i) {
-    res[i].line_number = _line_number ? static_cast<int64_t>(line_numbers[i]) : -1;
+    res[i].line_number =
+        _line_number ? static_cast<int64_t>(line_numbers[i]) : -1;
     res[i].byte_position = static_cast<int64_t>(byte_offsets[i]);
     res[i].match = lines[i];
   }
@@ -106,12 +106,11 @@ std::vector<Grep::Match> GrepSearcher::process_plain(
     // tmp_chunk.data(), ::tolower);
     xs::utils::str::simd::toLower(tmp_chunk.data(), tmp_chunk.size());
     op_chunk = &tmp_chunk;
-    std::transform(_pattern.begin(), _pattern.end(),
-                   pattern.begin(), ::tolower);
+    std::transform(_pattern.begin(), _pattern.end(), pattern.begin(),
+                   ::tolower);
   }
   std::vector<uint64_t> byte_offsets_match =
-      xs::search::global_byte_offsets_match(op_chunk, pattern,
-                                            !_only_matching);
+      xs::search::global_byte_offsets_match(op_chunk, pattern, !_only_matching);
   std::vector<uint64_t> byte_offsets_line;
   std::vector<uint64_t> line_numbers;
   if (_line_number) {
@@ -143,9 +142,11 @@ std::vector<Grep::Match> GrepSearcher::process_plain(
 
   std::vector<Grep::Match> res(byte_offsets_match.size());
   for (uint64_t i = 0; i < byte_offsets_match.size(); ++i) {
-    res[i].line_number = _line_number ? static_cast<int64_t>(line_numbers[i]) : -1;
+    res[i].line_number =
+        _line_number ? static_cast<int64_t>(line_numbers[i]) : -1;
     // TODO: include for only_matching stuff
-    res[i].byte_position = _byte_offset ? static_cast<int64_t>(byte_offsets_line[i]) : -1;
+    res[i].byte_position =
+        _byte_offset ? static_cast<int64_t>(byte_offsets_line[i]) : -1;
     res[i].match = lines[i];
   }
   return res;

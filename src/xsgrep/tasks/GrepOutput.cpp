@@ -70,7 +70,8 @@ void GrepOutput::add(std::vector<Grep::Match> partial_result) {
         while (true) {
           size_t match_pos;
           if (xs::utils::use_str_as_regex(_options.pattern) ||
-              (_options.locale == Grep::Locale::UTF_8 && _options.ignore_case)) {
+              (_options.locale == Grep::Locale::UTF_8 &&
+               _options.ignore_case)) {
             re2::RE2 re_pattern(
                 '(' +
                 std::string(_options.fixed_string
@@ -106,11 +107,10 @@ void GrepOutput::add(std::vector<Grep::Match> partial_result) {
           // print string part uncolored (eq. pythonic substr is
           //  str[shift:match_pos]) and pattern in RED
           _ostream << std::string(
-                           r.match.begin() + static_cast<int64_t>(shift),
-                           r.match.begin() + static_cast<int64_t>(match_pos))
-                    << RED
-                    << std::string(r.match.data() + match_pos, match_size)
-                    << COLOR_RESET;
+                          r.match.begin() + static_cast<int64_t>(shift),
+                          r.match.begin() + static_cast<int64_t>(match_pos))
+                   << RED << std::string(r.match.data() + match_pos, match_size)
+                   << COLOR_RESET;
           // start next search at new shift
           shift = match_pos + match_size;
           if (shift >= r.match.size()) {
@@ -119,8 +119,8 @@ void GrepOutput::add(std::vector<Grep::Match> partial_result) {
         }
         // print rest of the string (eq. pythonic substr is str[shift:])
         _ostream << std::string(r.match.begin() + static_cast<int64_t>(shift),
-                                 r.match.end())
-                  << '\n';
+                                r.match.end())
+                 << '\n';
       } else {
         _ostream << r.match << '\n';
       }

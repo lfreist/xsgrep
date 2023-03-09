@@ -17,7 +17,8 @@ class GrepSearcher
    * @param options: search/output options for grep like results
    */
   GrepSearcher(std::string pattern, bool byte_offset, bool line_number,
-                        bool match_only, bool regex, bool ignore_case, Grep::Locale locale);
+               bool match_only, bool regex, bool ignore_case,
+               Grep::Locale locale);
 
   /**
    * Search provided data according to the specified search criteria using a
