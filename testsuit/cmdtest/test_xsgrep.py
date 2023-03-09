@@ -8,6 +8,7 @@ import argparse
 import os
 import re
 import subprocess
+import sys
 
 import requests
 import base
@@ -26,6 +27,7 @@ def test_plain_ascii() -> base.TestSuit:
     commands = [
         base.Command("xs", ["xs", ASCII_PATTERN, INPUT_FILE]),
         base.Command("xs -j 1", ["xs", ASCII_PATTERN, INPUT_FILE, "-j", "1"]),
+        base.Command("xs --no-mmap", ["xs", ASCII_PATTERN, INPUT_FILE, "--no-mmap"]),
     ]
     return base.TestSuit(
         "ASCII search",
@@ -40,6 +42,7 @@ def test_regex_ascii() -> base.TestSuit:
     commands = [
         base.Command("xs", ["xs", ASCII_RE, INPUT_FILE]),
         base.Command("xs -j 1", ["xs", ASCII_RE, INPUT_FILE, "-j", "1"]),
+        base.Command("xs --no-mmap", ["xs", ASCII_RE, INPUT_FILE, "--no-mmap"]),
     ]
     return base.TestSuit(
         "ASCII regex search",
@@ -54,6 +57,7 @@ def test_plain_ascii_line_numbers() -> base.TestSuit:
     commands = [
         base.Command("xs", ["xs", ASCII_PATTERN, INPUT_FILE, "-n"]),
         base.Command("xs -j 1", ["xs", ASCII_PATTERN, INPUT_FILE, "-j", "1", "-n"]),
+        base.Command("xs --no-mmap", ["xs", ASCII_PATTERN, INPUT_FILE, "-n", "--no-mmap"]),
     ]
     return base.TestSuit(
         "ASCII search (-n)",
@@ -68,6 +72,7 @@ def test_regex_ascii_line_numbers() -> base.TestSuit:
     commands = [
         base.Command("xs", ["xs", ASCII_RE, INPUT_FILE, "-n"]),
         base.Command("xs -j 1", ["xs", ASCII_RE, INPUT_FILE, "-j", "1", "-n"]),
+        base.Command("xs --no-mmap", ["xs", ASCII_RE, INPUT_FILE, "-n", "--no-mmap"]),
     ]
     return base.TestSuit(
         "ASCII regex search (-n)",
@@ -82,6 +87,7 @@ def test_plain_ascii_ignore_case() -> base.TestSuit:
     commands = [
         base.Command("xs", ["xs", ASCII_PATTERN, INPUT_FILE, "-i"]),
         base.Command("xs -j 1", ["xs", ASCII_PATTERN, INPUT_FILE, "-j", "1", "-i"]),
+        base.Command("xs --no-mmap", ["xs", ASCII_PATTERN, INPUT_FILE, "-i", "--no-mmap"]),
     ]
     return base.TestSuit(
         "ASCII search (-i)",
@@ -96,6 +102,7 @@ def test_regex_ascii_ignore_case() -> base.TestSuit:
     commands = [
         base.Command("xs", ["xs", ASCII_RE, INPUT_FILE, "-i"]),
         base.Command("xs -j 1", ["xs", ASCII_RE, INPUT_FILE, "-j", "1", "-i"]),
+        base.Command("xs --no-mmap", ["xs", ASCII_RE, INPUT_FILE, "-i", "--no-mmap"]),
     ]
     return base.TestSuit(
         "ASCII regex search (-i)",
@@ -110,6 +117,7 @@ def test_plain_ascii_byte_offsets() -> base.TestSuit:
     commands = [
         base.Command("xs", ["xs", ASCII_PATTERN, INPUT_FILE, "-b"]),
         base.Command("xs -j 1", ["xs", ASCII_PATTERN, INPUT_FILE, "-j", "1", "-b"]),
+        base.Command("xs --no-mmap", ["xs", ASCII_PATTERN, INPUT_FILE, "-b", "--no-mmap"]),
     ]
     return base.TestSuit(
         "ASCII search (-b)",
@@ -124,6 +132,7 @@ def test_regex_ascii_byte_offsets() -> base.TestSuit:
     commands = [
         base.Command("xs", ["xs", ASCII_RE, INPUT_FILE, "-b"]),
         base.Command("xs -j 1", ["xs", ASCII_RE, INPUT_FILE, "-j", "1", "-b"]),
+        base.Command("xs --no-mmap", ["xs", ASCII_RE, INPUT_FILE, "-b", "--no-mmap"]),
     ]
     return base.TestSuit(
         "ASCII regex search (-b)",
@@ -138,6 +147,7 @@ def test_plain_ascii_match_only() -> base.TestSuit:
     commands = [
         base.Command("xs", ["xs", ASCII_PATTERN, INPUT_FILE, "-o"]),
         base.Command("xs -j 1", ["xs", ASCII_PATTERN, INPUT_FILE, "-j", "1", "-o"]),
+        base.Command("xs --no-mmap", ["xs", ASCII_PATTERN, INPUT_FILE, "-o", "--no-mmap"]),
     ]
     return base.TestSuit(
         "ASCII search (-o)",
@@ -152,6 +162,7 @@ def test_regex_ascii_match_only() -> base.TestSuit:
     commands = [
         base.Command("xs", ["xs", ASCII_RE, INPUT_FILE, "-o"]),
         base.Command("xs -j 1", ["xs", ASCII_RE, INPUT_FILE, "-j", "1", "-o"]),
+        base.Command("xs --no-mmap", ["xs", ASCII_RE, INPUT_FILE, "-o", "--no-mmap"]),
     ]
     return base.TestSuit(
         "ASCII regex search (-o)",
@@ -166,6 +177,7 @@ def test_plain_ascii_fixed_string() -> base.TestSuit:
     commands = [
         base.Command("xs", ["xs", ASCII_RE, INPUT_FILE, "-F"]),
         base.Command("xs -j 1", ["xs", ASCII_RE, INPUT_FILE, "-j", "1", "-F"]),
+        base.Command("xs --no-mmap", ["xs", ASCII_RE, INPUT_FILE, "-F", "--no-mmap"]),
     ]
     return base.TestSuit(
         "ASCII search (-F)",
@@ -181,7 +193,7 @@ def test_count() -> base.TestSuit:
 
 def parse_args():
     parser = argparse.ArgumentParser(prog="xs_test", description="Automated test of xs grep")
-    parser.add_argument("--input-file", metavar="PATH", help="File to be searched")
+    parser.add_argument("input", metavar="INPUT_FILE", help="File to be searched")
     parser.add_argument("--list-benchmarks", action="store_true", help="List available benchmarks by name and exit")
     parser.add_argument("--exit-on-failure", action="store_true", help="Stop testing if a single test fails")
     parser.add_argument("--filter", metavar="FILTER", default="", help="Filter benchmarks by name using regex")
@@ -206,7 +218,7 @@ if __name__ == "__main__":
     }
     args = parse_args()
     EXIT_ON_FAIL = args.exit_on_failure
-    INPUT_FILE = args.input_file
+    INPUT_FILE = args.input
     base.SILENT = args.silent
     if args.list_benchmarks:
         print("The following benchmarks are available:")
@@ -214,8 +226,20 @@ if __name__ == "__main__":
             print(f" - {name}")
         exit(0)
 
+    failed = 0
+    run = 0
     for name, bm_func in benchmarks.items():
         res = None
         if re.search(args.filter, name):
             res = bm_func().run()
+            if str(res).endswith("FAILED"):
+                failed += 1
+            run += 1
             print(res)
+
+    print("================================================================================")
+    if failed > 0:
+        print(f"{failed} out of {run} tests failed.")
+        sys.exit(1)
+    else:
+        print(f"All Tests ({run}) passed.")

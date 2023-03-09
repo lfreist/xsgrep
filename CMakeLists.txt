@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.9)
-project(xsgrep C CXX)
+project(xs LANGUAGES C CXX VERSION 1.0.0 DESCRIPTION "A GNU grep like executable written with x-search")
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)

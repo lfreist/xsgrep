@@ -41,7 +41,7 @@ setup_venv:
 	python3 -m venv venv; . venv/bin/activate; python3 -m pip install -r requirements.txt
 
 test: setup_venv
-	. venv/bin/activate; python3 testsuit/test_xsgrep.py;
+	. venv/bin/activate; python3 testsuit/cmdtest/test_xsgrep.py;
 
 check_style:
 	bash ./format_check.sh

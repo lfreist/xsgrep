@@ -5,6 +5,7 @@
 
 #include <unistd.h>
 #include <xsearch/xsearch.h>
+#include "../grep.h"
 
 #include <cstdio>
 #include <memory>
@@ -30,60 +31,13 @@
 // _____________________________________________________________________________
 
 /**
- * GrepPartialResult: A struct holding all information necessary to produce a
- *  GNU grep like output.
- *
- * @param byte_offset_match
- * @param byte_offset_line
- * @param line_number
- * @param str: the actual output: either line or pattern
- *
- * GNU grep output looks like: "[index]:str"
- */
-struct GrepPartialResult {
-  uint64_t byte_offset_match = 0;
-  uint64_t byte_offset_line = 0;
-  uint64_t line_number = 0;
-  std::string str;
-
-  /**
-   * GrepPartialResult can be sorted using this method
-   * @param other
-   * @return
-   */
-  bool operator<(const GrepPartialResult& other) const;
-};
-
-/**
- * GrepOptions: A struct holding information about what xsgrep searches and how
- * results will be printed.
- *
- * @param regex: was a regex search performed?
- * @param index: should the index be printed?
- * @param color: use colored output?
- * @param only_matching: only print matches and search for match offsets
- * @param pattern: the pattern that was searched
- */
-struct GrepOptions {
-  bool regex = false;
-  bool line_number = false;
-  bool byte_offset = false;
-  bool color = isatty(STDOUT_FILENO);
-  bool only_matching = false;
-  bool ignore_case = true;
-  bool no_ascii = false;
-  std::string pattern;
-};
-
-/**
  * GrepOutput: The actual result class that inherits xs::BaseResult.
  *  It collects vectors of GrepPartialResults.
  */
 class GrepOutput
-    : public xs::result::base::Result<std::vector<GrepPartialResult>> {
+    : public xs::result::base::Result<std::vector<Grep::Match>> {
  public:
-  explicit GrepOutput(GrepOptions options);
-  GrepOutput(GrepOptions options, std::ostream& ostream);
+  explicit GrepOutput(Grep::Options options, std::ostream& ostream = std::cout);
 
   /**
    * Collect results and pass them ordered to the private add method.
@@ -93,7 +47,7 @@ class GrepOutput
    * @param partial_result:
    * @param id: used for ordered output. Must be a closed sequence {0..X} of int
    */
-  void add(std::vector<GrepPartialResult> partial_result, uint64_t id) override;
+  void add(std::vector<Grep::Match> partial_result, uint64_t id) override;
 
   /**
    * Return the number of lines written to ostream so far.
@@ -108,14 +62,14 @@ class GrepOutput
    *  Always writes to standard out.
    * @param partial_result
    */
-  void add(std::vector<GrepPartialResult> partial_result) override;
+  void add(std::vector<Grep::Match> partial_result) override;
+
+  Grep::Options _options;
+  std::ostream& _ostream;
 
   /// Buffer for results that are received not in order
-  std::unordered_map<uint64_t, std::vector<GrepPartialResult>> _buffer;
+  std::unordered_map<uint64_t, std::vector<Grep::Match>> _buffer{};
   /// Indicates the index of the result that is written next
-  uint64_t _current_index = 0;
-
-  GrepOptions _options;
-  std::ostream& _ostream;
-  uint64_t _lines_written = 0;
+  uint64_t _current_index{0};
+  uint64_t _lines_written{0};
 };
