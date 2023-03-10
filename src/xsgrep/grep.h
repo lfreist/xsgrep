@@ -58,8 +58,10 @@ class Grep {
     bool print_file_path = false;
     std::string pattern;
     std::string file;
+    std::string meta_file_path;
     bool no_mmap = true;
     int num_threads = 0;
+    int num_reader_threads = 1;
   };
 
   // Constructors
@@ -73,6 +75,7 @@ class Grep {
   void write(std::ostream* stream = &std::cout);
 
   Grep& set_file(std::string file);
+  Grep& set_meta_file(std::string meta_file);
   Grep& set_pattern(std::string pattern);
   Grep& set_count_only(bool val);
   Grep& set_fixed_string(bool val);
@@ -85,8 +88,10 @@ class Grep {
   Grep& set_print_file_path(bool val);
   Grep& set_use_mmap(bool val);
   Grep& set_num_threads(int val);
+  Grep& set_num_reader_threads(int val);
 
   [[nodiscard]] const std::string& file() const;
+  [[nodiscard]] const std::string& meta_file() const;
   [[nodiscard]] const std::string& pattern() const;
   [[nodiscard]] bool count_only() const;
   [[nodiscard]] bool fixed_string() const;
@@ -99,6 +104,7 @@ class Grep {
   [[nodiscard]] bool print_file_path() const;
   [[nodiscard]] bool use_mmap() const;
   [[nodiscard]] int num_threads() const;
+  [[nodiscard]] int num_reader_threads() const;
 
  private:
   [[nodiscard]] std::vector<base_processors> get_processors() const;

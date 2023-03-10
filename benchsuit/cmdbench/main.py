@@ -108,7 +108,19 @@ def main(conf_file: str, cwd: str | None, out_dir: str) -> None:
         result.plot()
 
 
+def recursive_files(path: str):
+    for obj in os.listdir(path):
+        p = os.path.join(path, obj)
+        if os.path.isdir(p):
+            recursive_files(p)
+        if os.path.isfile(p) and obj.endswith(".json"):
+            main(p, args.cwd, args.output)
+
+
 if __name__ == "__main__":
+    import warnings
+    warnings.filterwarnings("ignore")
+
     args = parse_arguments()
     result_meta_data = f"{args.output}.results.meta.json"
 
@@ -118,10 +130,7 @@ if __name__ == "__main__":
             exit(1)
         bm = None
         if os.path.isdir(conf):
-            for obj in os.listdir(conf):
-                path = os.path.join(conf, obj)
-                if os.path.isfile(path) and obj.endswith(".json"):
-                    main(path, args.cwd, args.output)
+            recursive_files(conf)
         else:
             main(conf, args.cwd, args.output)
 

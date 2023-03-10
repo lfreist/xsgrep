@@ -22,6 +22,7 @@ Grep::Grep(std::string pattern, std::string file, Grep::Options options)
   set_colored_output(_options.color);
   set_num_threads(_options.num_threads);
   set_locale(_options.locale);
+  set_num_reader_threads(_options.num_reader_threads);
 }
 
 Grep::Grep(Options options) : _options(std::move(options)) {
@@ -30,6 +31,7 @@ Grep::Grep(Options options) : _options(std::move(options)) {
   set_colored_output(_options.color);
   set_num_threads(_options.num_threads);
   set_locale(_options.locale);
+  set_num_reader_threads(_options.num_reader_threads);
 }
 
 uint64_t Grep::count() {
@@ -76,6 +78,11 @@ void Grep::write(std::ostream* stream) {
 
 Grep& Grep::set_file(std::string file) {
   _options.file = std::move(file);
+  return *this;
+}
+
+Grep& Grep::set_meta_file(std::string meta_file) {
+  _options.meta_file_path = std::move(meta_file);
   return *this;
 }
 
@@ -163,7 +170,20 @@ Grep& Grep::set_num_threads(int val) {
   return *this;
 }
 
+Grep& Grep::set_num_reader_threads(int val) {
+  int fallback_value = _max_phys_cores / 4;
+  if (fallback_value < 2) {
+    fallback_value = 2;
+  }
+  _options.num_reader_threads =
+      val < 1 ? fallback_value
+              : (val > _max_phys_cores ? _max_phys_cores : val);
+  return *this;
+}
+
 const std::string& Grep::file() const { return _options.file; }
+
+const std::string& Grep::meta_file() const { return _options.meta_file_path; }
 
 const std::string& Grep::pattern() const { return _options.pattern; }
 
@@ -189,21 +209,49 @@ bool Grep::use_mmap() const { return _options.no_mmap; }
 
 int Grep::num_threads() const { return _options.num_threads; }
 
+int Grep::num_reader_threads() const { return _options.num_reader_threads; }
+
 // ----- private ---------------------------------------------------------------
 std::vector<Grep::base_processors> Grep::get_processors() const {
   std::vector<std::unique_ptr<xs::task::base::InplaceProcessor<xs::DataChunk>>>
       ret;
-  if (_options.line_number) {
-    ret.push_back(std::make_unique<xs::task::processor::NewLineSearcher>());
+  if (_options.meta_file_path.empty()) {
+    if (_options.line_number) {
+      ret.push_back(std::make_unique<xs::task::processor::NewLineSearcher>());
+    }
+  } else {
+    xs::MetaFile metaFile(_options.meta_file_path, std::ios::in);
+    switch (metaFile.get_compression_type()) {
+      case xs::CompressionType::LZ4:
+        ret.push_back(std::make_unique<xs::task::processor::LZ4Decompressor>());
+        break;
+      case xs::CompressionType::ZSTD:
+        ret.emplace_back(
+            std::make_unique<xs::task::processor::ZSTDDecompressor>());
+        break;
+      default:
+        break;
+    }
   }
   return ret;
 }
 
 Grep::base_reader Grep::get_reader() const {
-  if (_options.no_mmap) {
-    return std::make_unique<xs::task::reader::FileBlockReader>(_options.file);
+  if (_options.meta_file_path.empty()) {
+    if (_options.no_mmap) {
+      return std::make_unique<xs::task::reader::FileBlockReader>(_options.file);
+    }
+    return std::make_unique<xs::task::reader::FileBlockReaderMMAP>(
+        _options.file);
+  } else {
+    if (_options.no_mmap) {
+      return std::make_unique<xs::task::reader::FileBlockMetaReader>(
+          _options.file, _options.meta_file_path, _options.num_reader_threads);
+    } else {
+      return std::make_unique<xs::task::reader::FileBlockMetaReaderMMAP>(
+          _options.file, _options.meta_file_path, _options.num_reader_threads);
+    }
   }
-  return std::make_unique<xs::task::reader::FileBlockReaderMMAP>(_options.file);
 }
 
 bool Grep::use_regex() const {

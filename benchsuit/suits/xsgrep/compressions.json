@@ -1,0 +1,72 @@
+{
+  "timer": "GNU time",
+  "name": "Preprocessed (compressed) input",
+  "description": "",
+  "commands": {
+    "xspp zstd -> xs grep": [
+      "xs",
+      "Sherlock",
+      "en.xszst",
+      "-m",
+      "en.xszst.meta"
+    ],
+    "xspp lz4 -> xs grep": [
+      "xs",
+      "Sherlock",
+      "en.xslz4",
+      "-m",
+      "en.xslz4.meta"
+    ],
+    "xspp lz4 hc -> xs grep": [
+      "xs",
+      "Sherlock",
+      "en.hc.xslz4",
+      "-m",
+      "en.hc.xslz4.meta"
+    ]
+  },
+  "setup_cmd": [
+    [
+      "xspp",
+      "en.txt",
+      "-m",
+      "en.xszst.meta",
+      "-o",
+      "en.xszst",
+      "-a",
+      "zstd"
+    ],
+    [
+      "xspp",
+      "en.txt",
+      "-m",
+      "en.xslz4.meta",
+      "-o",
+      "en.xslz4",
+      "-a",
+      "lz4"
+    ],
+    [
+      "xspp",
+      "en.txt",
+      "-m",
+      "en.hc.xslz4.meta",
+      "-o",
+      "en.hc.xslz4",
+      "-a",
+      "lz4",
+      "--hc"
+    ]
+  ],
+  "cleanup_cmd": [
+    [
+      "rm",
+      "en.xszst",
+      "en.xszst.meta",
+      "en.xslz4",
+      "en.xslz4.meta",
+      "en.hc.xslz4",
+      "en.hc.xslz4.meta"
+    ]
+  ]
+}

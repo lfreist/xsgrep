@@ -1,0 +1,38 @@
+{
+  "timer": "GNU time",
+  "name": "Compressed input (ZStandard)",
+  "description": "",
+  "commands": {
+    "zstdcat -> GNU grep": "zstdcat en.zst | grep Sherlock",
+    "zstdcat -> ripgrep": "zstdcat en.zst | rg Sherlock",
+    "zstdcat -> xs grep": "zstdcat en.zst | xs Sherlock",
+    "xspp -> xs grep": [
+      "xs",
+      "Sherlock",
+      "en.xszst",
+      "-m", "en.xszst.meta"
+    ]
+  },
+  "setup_cmd": [
+    [
+      "zstd",
+      "en.txt",
+      "-o", "en.zst"
+    ],
+    [
+      "xspp",
+      "en.txt",
+      "-m", "en.xszst.meta",
+      "-o", "en.xszst",
+      "-a", "zstd"
+    ]
+  ],
+  "cleanup_cmd": [
+    [
+      "rm",
+      "en.zst",
+      "en.xszst",
+      "en.xszst.meta"
+    ]
+  ]
+}

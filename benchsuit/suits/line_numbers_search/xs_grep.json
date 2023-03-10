@@ -1,0 +1,46 @@
+{
+  "timer": "GNU time",
+  "name": "xs grep: search line numbers",
+  "description": "",
+  "commands": {
+    "xs": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-j",
+      "8"
+    ],
+    "xs -n": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-n",
+      "-j",
+      "8"
+    ],
+    "xs -n -m": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-m",
+      "en.meta",
+      "-n",
+      "-j",
+      "8"
+    ]
+  },
+  "setup_cmd": [
+    [
+      "xspp",
+      "en.txt",
+      "-m",
+      "en.meta"
+    ]
+  ],
+  "cleanup_cmd": [
+    [
+      "rm",
+      "en.meta"
+    ]
+  ]
+}
