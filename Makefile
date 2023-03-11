@@ -44,8 +44,8 @@ check_style:
 	bash ./format_check.sh
 
 benchmark: install_benchmark install
-	python3 benchsuit/cmdbench/main.py --config benchsuit/suits --iterations 10 --output benchsuit/results/cache/$$(hostname) --cwd /tmp/
-	python3 benchsuit/cmdbench/main.py --config benchsuit/suits --iterations 10 --output benchsuit/results/no-cache/$$(hostname) --drop-cache "$$HOME/drop_cache" --cwd /tmp/
+	python3 benchsuit/cmdbench/main.py --config benchsuit/suits --iterations 10 --output benchsuit/results/cache/$$(hostname) --cwd sample_data/ --sleep 10
+	python3 benchsuit/cmdbench/main.py --config benchsuit/suits --iterations 10 --output benchsuit/results/no-cache/$$(hostname) --drop-cache "$$HOME/drop_cache" --cwd sample_data/ --sleep 10
 
 install_benchmark: build_benchmark
 	cp build-benchmark/src/xsgrep/xs $$HOME/.local/bin/benched_xs

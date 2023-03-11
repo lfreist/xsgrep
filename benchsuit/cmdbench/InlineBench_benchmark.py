@@ -7,6 +7,7 @@ We use the output of InlineBench (https://github.com/lfreist/InlineBench) as res
 import json
 import statistics
 import subprocess
+import time
 
 from base import (Command, CommandResult, CommandFailedError, InvalidCommandError, BenchmarkResult, Benchmark, log,
                   get_cpu_name)
@@ -179,8 +180,9 @@ class InlineBenchBenchmarkResult(BenchmarkResult):
 class InlineBenchBenchmark(Benchmark):
     def __init__(self, name: str, commands: List[InlineBenchCommand], setup_commands: List[Command] = None,
                  cleanup_commands: List[Command] = None, iterations: int = 3,
-                 drop_cache: Command | None = None):
+                 drop_cache: Command | None = None, sleep: int = 0):
         Benchmark.__init__(self, name, commands, setup_commands, cleanup_commands, iterations, drop_cache)
+        self.sleep = 0
 
     def _run_benchmarks(self) -> InlineBenchBenchmarkResult:
         result = InlineBenchBenchmarkResult(self.name)
@@ -191,6 +193,7 @@ class InlineBenchBenchmark(Benchmark):
                 else:
                     self.drop_cache.run()
                 log(f"  {iteration}/{self.iterations}: {cmd.name}", end='\r', flush=True)
+                time.sleep(self.sleep)
                 part_res = cmd.run()
                 if part_res is not None:
                     result += part_res

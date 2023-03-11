@@ -7,6 +7,7 @@ We utilize GNU time to measure wall, sys (cpu) and usr (cpu) times of commands.
 import platform
 import statistics
 import subprocess
+import time
 
 from base import (Command, CommandResult, CommandFailedError, InvalidCommandError, BenchmarkResult, Benchmark,
                   get_cpu_name, log)
@@ -141,8 +142,9 @@ class GNUTimeBenchmarkResult(BenchmarkResult):
 class GNUTimeBenchmark(Benchmark):
     def __init__(self, name: str, commands: List[GNUTimeCommand], setup_commands: List[Command] = None,
                  cleanup_commands: List[Command] = None, iterations: int = 3,
-                 drop_cache: Command | None = None):
+                 drop_cache: Command | None = None, sleep: int = 0):
         Benchmark.__init__(self, name, commands, setup_commands, cleanup_commands, iterations, drop_cache)
+        self.sleep = sleep
 
     def _run_benchmarks(self) -> GNUTimeBenchmarkResult:
         result = GNUTimeBenchmarkResult(self.name)
@@ -153,6 +155,7 @@ class GNUTimeBenchmark(Benchmark):
                 else:
                     self.drop_cache.run()
                 log(f"  {iteration}/{self.iterations}: {cmd}", end='\r', flush=True)
+                time.sleep(self.sleep)
                 part_res = cmd.run()
                 if part_res:
                     result += part_res
