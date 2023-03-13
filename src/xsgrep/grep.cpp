@@ -160,7 +160,7 @@ Grep& Grep::set_use_mmap(bool val) {
 }
 
 Grep& Grep::set_num_threads(int val) {
-  int fallback_value = _max_phys_cores / 4;
+  int fallback_value = _max_phys_cores / 2;
   if (fallback_value < 2) {
     fallback_value = 2;
   }
@@ -171,7 +171,7 @@ Grep& Grep::set_num_threads(int val) {
 }
 
 Grep& Grep::set_num_reader_threads(int val) {
-  int fallback_value = _max_phys_cores / 4;
+  int fallback_value = _max_phys_cores / 2;
   if (fallback_value < 2) {
     fallback_value = 2;
   }
@@ -237,6 +237,9 @@ std::vector<Grep::base_processors> Grep::get_processors() const {
 }
 
 Grep::base_reader Grep::get_reader() const {
+  if (_options.file.empty() || _options.file == "-") {
+    return std::make_unique<xs::task::reader::FileBlockReader>(_options.file);
+  }
   if (_options.meta_file_path.empty()) {
     if (_options.no_mmap) {
       return std::make_unique<xs::task::reader::FileBlockReader>(_options.file);

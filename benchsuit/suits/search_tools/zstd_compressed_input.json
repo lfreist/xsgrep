@@ -11,6 +11,13 @@
       "Sherlock",
       "en.xszst",
       "-m", "en.xszst.meta"
+    ],
+    "xspp -> xs grep --no-mmap": [
+      "xs",
+      "Sherlock",
+      "en.xszst",
+      "-m", "en.xszst.meta",
+      "--no-mmap"
     ]
   },
   "setup_cmd": [

@@ -11,6 +11,13 @@
       "Sherlock",
       "en.xslz4",
       "-m", "en.xslz4.meta"
+    ],
+    "xspp -> xs grep --no-mmap": [
+      "xs",
+      "Sherlock",
+      "en.xslz4",
+      "-m", "en.xslz4.meta",
+      "--no-mmap"
     ]
   },
   "setup_cmd": [

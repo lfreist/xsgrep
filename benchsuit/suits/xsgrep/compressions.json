@@ -23,6 +23,30 @@
       "en.hc.xslz4",
       "-m",
       "en.hc.xslz4.meta"
+    ],
+    "xspp zstd -> xs grep --no-mmap": [
+      "xs",
+      "Sherlock",
+      "en.xszst",
+      "-m",
+      "en.xszst.meta",
+      "--no-mmap"
+    ],
+    "xspp lz4 -> xs grep --no-mmap": [
+      "xs",
+      "Sherlock",
+      "en.xslz4",
+      "-m",
+      "en.xslz4.meta",
+      "--no-mmap"
+    ],
+    "xspp lz4 hc -> xs grep --no-mmap": [
+      "xs",
+      "Sherlock",
+      "en.hc.xslz4",
+      "-m",
+      "en.hc.xslz4.meta",
+      "--no-mmap"
     ]
   },
   "setup_cmd": [
