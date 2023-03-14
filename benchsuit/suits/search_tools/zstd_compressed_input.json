@@ -6,12 +6,7 @@
     "zstdcat -> GNU grep": "zstdcat en.zst | grep Sherlock",
     "zstdcat -> ripgrep": "zstdcat en.zst | rg Sherlock",
     "zstdcat -> xs grep": "zstdcat en.zst | xs Sherlock",
-    "xspp -> xs grep": [
-      "xs",
-      "Sherlock",
-      "en.xszst",
-      "-m", "en.xszst.meta"
-    ],
+    "xspp -> xs grep": "xs Sherlock en.xszst -m en.xszst.meta",
     "xspp -> xs grep --no-mmap": [
       "xs",
       "Sherlock",
