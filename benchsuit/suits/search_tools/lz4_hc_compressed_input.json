@@ -3,6 +3,14 @@
   "name": "Compressed input (LZ4 HC)",
   "description": "",
   "commands": {
+    "lz4cat": [
+      "lz4cat",
+      "en.lz4"
+    ],
+    "cat": [
+      "cat",
+      "en.lz4"
+    ],
     "lz4cat -> GNU grep": "lz4cat en.lz4 | grep Sherlock",
     "lz4cat -> ripgrep": "lz4cat en.lz4 | rg Sherlock",
     "lz4cat -> xs grep": "lz4cat en.lz4 | xs Sherlock",
@@ -11,13 +19,6 @@
       "Sherlock",
       "en.xslz4",
       "-m", "en.xslz4.meta"
-    ],
-    "xspp -> xs grep --no-mmap": [
-      "xs",
-      "Sherlock",
-      "en.xslz4",
-      "-m", "en.xslz4.meta",
-      "--no-mmap"
     ]
   },
   "setup_cmd": [

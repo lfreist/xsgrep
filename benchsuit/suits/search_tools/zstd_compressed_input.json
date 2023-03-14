@@ -3,16 +3,22 @@
   "name": "Compressed input (ZStandard)",
   "description": "",
   "commands": {
+    "zstdcat": [
+      "zstdcat",
+      "en.zst"
+    ],
+    "cat": [
+      "cat",
+      "en.zst"
+    ],
     "zstdcat -> GNU grep": "zstdcat en.zst | grep Sherlock",
     "zstdcat -> ripgrep": "zstdcat en.zst | rg Sherlock",
     "zstdcat -> xs grep": "zstdcat en.zst | xs Sherlock",
-    "xspp -> xs grep": "xs Sherlock en.xszst -m en.xszst.meta",
-    "xspp -> xs grep --no-mmap": [
+    "xspp -> xs grep": [
       "xs",
       "Sherlock",
       "en.xszst",
-      "-m", "en.xszst.meta",
-      "--no-mmap"
+      "-m", "en.xszst.meta"
     ]
   },
   "setup_cmd": [
