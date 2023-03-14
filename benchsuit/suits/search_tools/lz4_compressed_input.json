@@ -24,7 +24,8 @@
     [
       "lz4",
       "en.txt",
-      "en.lz4"
+      "en.lz4",
+      "-f"
     ],
     [
       "xspp",

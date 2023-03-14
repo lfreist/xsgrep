@@ -24,7 +24,8 @@
     [
       "zstd",
       "en.txt",
-      "-o", "en.zst"
+      "-o", "en.zst",
+      "-f"
     ],
     [
       "xspp",
