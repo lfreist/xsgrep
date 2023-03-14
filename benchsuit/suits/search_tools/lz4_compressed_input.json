@@ -1,0 +1,45 @@
+{
+  "timer": "GNU time",
+  "name": "Compressed input (LZ4)",
+  "description": "",
+  "commands": {
+    "lz4cat -> GNU grep": "lz4cat en.lz4 | grep Sherlock",
+    "lz4cat -> ripgrep": "lz4cat en.lz4 | rg Sherlock",
+    "lz4cat -> xs grep": "lz4cat en.lz4 | xs Sherlock",
+    "xspp -> xs grep": [
+      "xs",
+      "Sherlock",
+      "en.xslz4",
+      "-m", "en.xslz4.meta"
+    ],
+    "xspp -> xs grep --no-mmap": [
+      "xs",
+      "Sherlock",
+      "en.xslz4",
+      "-m", "en.xslz4.meta",
+      "--no-mmap"
+    ]
+  },
+  "setup_cmd": [
+    [
+      "lz4",
+      "en.txt",
+      "en.lz4"
+    ],
+    [
+      "xspp",
+      "en.txt",
+      "-m", "en.xslz4.meta",
+      "-o", "en.xslz4",
+      "-a", "lz4"
+    ]
+  ],
+  "cleanup_cmd": [
+    [
+      "rm",
+      "en.lz4",
+      "en.xslz4",
+      "en.xslz4.meta"
+    ]
+  ]
+}

@@ -32,8 +32,6 @@ int main(int argc, char** argv) {
   std::string benchmark_format;
 #endif
   Grep::Options grep_options;
-  std::string meta_file_path;
-  int num_max_readers = 0;
 
   po::options_description options("Options for xsgrep");
   po::positional_options_description positional_options;
@@ -56,7 +54,8 @@ int main(int argc, char** argv) {
       "search pattern");
   add("PATH", po::value<std::string>(&grep_options.file)->default_value(""),
       "input file, stdin if '-' or empty");
-  add("metafile,m", po::value<std::string>(&meta_file_path)->default_value(""),
+  add("metafile,m",
+      po::value<std::string>(&grep_options.meta_file_path)->default_value(""),
       "metafile of the corresponding FILE");
   add("help,h", "prints this help message");
   add("version,V", "display version information and exit");
@@ -65,7 +64,8 @@ int main(int argc, char** argv) {
           ->default_value(0)
           ->implicit_value(0),
       "number of threads");
-  add("max-readers", po::value<int>(&num_max_readers)->default_value(0),
+  add("max-readers",
+      po::value<int>(&grep_options.num_reader_threads)->default_value(1),
       "number of concurrently reading tasks (default is number of threads");
   add("count,c", po::bool_switch(&grep_options.count),
       "print only a count of selected lines");
@@ -117,7 +117,6 @@ int main(int argc, char** argv) {
   }
 
   Grep grep(grep_options);
-
   grep.write();
 
   INLINE_BENCHMARK_WALL_STOP("total");

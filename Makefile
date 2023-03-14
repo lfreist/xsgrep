@@ -1,6 +1,6 @@
 NAME=xsgrep
 
-.PHONY: all test check_style benchmark clean help install
+.PHONY: all test check_style benchmark clean help install install_benchmark uninstall
 
 help:
 	@echo "--------------------------------------------------------------------------------"
@@ -37,17 +37,18 @@ build_sanitizer: init
 	cmake -B build-address-sanitizer -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_FLAGS="-fsanitize=address" -DCMAKE_CXX_COMPILER=/usr/bin/clang++-15 -DRE2_BUILD_TESTING=off
 	cmake --build build-address-sanitizer -j $(nproc) 2>/dev/null
 
-setup_venv:
-	python3 -m venv venv; . venv/bin/activate; python3 -m pip install -r requirements.txt
-
-test: setup_venv
-	. venv/bin/activate; python3 testsuit/cmdtest/test_xsgrep.py;
+test:
+	python3 testsuit/cmdtest/test_xsgrep.py;
 
 check_style:
 	bash ./format_check.sh
 
-benchmark: build_benchmark
+benchmark: install_benchmark install
+	python3 benchsuit/cmdbench/main.py --config benchsuit/suits --iterations 10 --output benchsuit/results/cache/$$(hostname) --cwd sample_data/ --sleep 10
+	python3 benchsuit/cmdbench/main.py --config benchsuit/suits --iterations 10 --output benchsuit/results/no-cache/$$(hostname) --drop-cache "$$HOME/drop_cache" --cwd sample_data/ --sleep 10
 
+install_benchmark: build_benchmark
+	cp build-benchmark/src/xsgrep/xs $$HOME/.local/bin/benched_xs
 
 install: build
 	bash scripts/install.sh

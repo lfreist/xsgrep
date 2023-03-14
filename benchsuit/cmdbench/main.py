@@ -27,7 +27,8 @@ def parse_config(path: str, cwd: str | None = None) -> base.Benchmark:
             data["name"],
             commands=commands,
             setup_commands=[base.Command(cmd[0], cmd=cmd, cwd=cwd) for cmd in data["setup_cmd"]],
-            cleanup_commands=[base.Command(cmd[0], cmd=cmd, cwd=cwd) for cmd in data["cleanup_cmd"]]
+            cleanup_commands=[base.Command(cmd[0], cmd=cmd, cwd=cwd) for cmd in data["cleanup_cmd"]],
+            sleep=args.sleep
         )
     elif data["timer"].lower() == "inlinebench":
         commands = [
@@ -37,7 +38,8 @@ def parse_config(path: str, cwd: str | None = None) -> base.Benchmark:
             data["name"],
             commands=commands,
             setup_commands=[base.Command(cmd[0], cmd=cmd, cwd=cwd) for cmd in data["setup_cmd"]],
-            cleanup_commands=[base.Command(cmd[0], cmd=cmd, cwd=cwd) for cmd in data["cleanup_cmd"]]
+            cleanup_commands=[base.Command(cmd[0], cmd=cmd, cwd=cwd) for cmd in data["cleanup_cmd"]],
+            sleep=args.sleep
         )
     else:
         raise UnknownTimerError(data["timer"])
@@ -67,6 +69,8 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument("--drop-cache", metavar="PATH", help="Path to executable that drops RAM caches", default="")
     parser.add_argument("--iterations", "-i", metavar="INTEGER", type=int, default=3,
                         help="Number of iterations per benchmark")
+    parser.add_argument("--sleep", "-p", metavar="INTEGER", type=int, default=0,
+                        help="sleep x seconds between running benchmarks")
     parser.add_argument("--output", "-o", metavar="PATH", default="",
                         help="The directory where results are written to")
 
@@ -108,7 +112,19 @@ def main(conf_file: str, cwd: str | None, out_dir: str) -> None:
         result.plot()
 
 
+def recursive_files(path: str):
+    for obj in os.listdir(path):
+        p = os.path.join(path, obj)
+        if os.path.isdir(p):
+            recursive_files(p)
+        if os.path.isfile(p) and obj.endswith(".json"):
+            main(p, args.cwd, args.output)
+
+
 if __name__ == "__main__":
+    import warnings
+    warnings.filterwarnings("ignore")
+
     args = parse_arguments()
     result_meta_data = f"{args.output}.results.meta.json"
 
@@ -118,10 +134,7 @@ if __name__ == "__main__":
             exit(1)
         bm = None
         if os.path.isdir(conf):
-            for obj in os.listdir(conf):
-                path = os.path.join(conf, obj)
-                if os.path.isfile(path) and obj.endswith(".json"):
-                    main(path, args.cwd, args.output)
+            recursive_files(conf)
         else:
             main(conf, args.cwd, args.output)
 
