@@ -8,11 +8,12 @@
 #define BLOCK_SIZE 16777216  // 16 MiB
 
 int main(int argc, char** argv) {
-  if (argc != 2) {
+  if (argc > 2) {
     std::cerr << "Usage: ./just_read <file_path>\n";
     return 1;
   }
-  std::ifstream f(argv[1]);
+  std::string file = argc == 1 ? std::string("/dev/stdin") : argv[2];
+  std::ifstream f(file);
   if (!f) {
     std::cerr << "Could not read '" << argv[1] << "'.\n";
     return 2;
