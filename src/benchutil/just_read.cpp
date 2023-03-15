@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
     return 1;
   }
   std::string file =
-      argc == 1 ? std::string("/dev/stdin") : std::string(argv[2]);
+      argc == 1 ? std::string("/dev/stdin") : std::string(argv[1]);
   std::ifstream f(file);
   if (!f) {
     std::cerr << "Could not read '" << argv[1] << "'.\n";
