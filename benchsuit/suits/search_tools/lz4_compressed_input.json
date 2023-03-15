@@ -7,8 +7,8 @@
       "lz4cat",
       "en.lz4"
     ],
-    "cat": [
-      "cat",
+    "just_read": [
+      "just_read",
       "en.lz4"
     ],
     "lz4cat -> GNU grep": "lz4cat en.lz4 | grep Sherlock",

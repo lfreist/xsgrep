@@ -49,6 +49,7 @@ benchmark: install_benchmark install
 
 install_benchmark: build_benchmark
 	cp build-benchmark/src/xsgrep/xs $$HOME/.local/bin/benched_xs
+	cp build-benchmark/src/benchutil/just_read $$HOME/.local/bin/just_read
 
 install: build
 	bash scripts/install.sh

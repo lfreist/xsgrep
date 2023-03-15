@@ -7,9 +7,9 @@
       "zstdcat",
       "en.zst"
     ],
-    "cat": [
-      "cat",
-      "en.zst"
+    "just_read": [
+      "just_read",
+      "en.lz4"
     ],
     "zstdcat -> GNU grep": "zstdcat en.zst | grep Sherlock",
     "zstdcat -> ripgrep": "zstdcat en.zst | rg Sherlock",

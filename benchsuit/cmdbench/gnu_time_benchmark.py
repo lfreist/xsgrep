@@ -76,10 +76,8 @@ class GNUTimeCommand(Command):
         return ["/usr/bin/time", "-f", "%e\t%U\t%S"] + self.cmd
 
     def run(self) -> GNUTimeResult | None:
-        tmp_file = tempfile.TemporaryFile()
         out = subprocess.Popen(self._timed_command(), stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                shell=(type(self.cmd) == str), cwd=self.cwd).communicate()[1]
-        tmp_file.close()
         out = out.decode()
         wall, usr_cpu, sys_cpu = out.split('\t')
         try:
