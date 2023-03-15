@@ -171,12 +171,8 @@ Grep& Grep::set_num_threads(int val) {
 }
 
 Grep& Grep::set_num_reader_threads(int val) {
-  int fallback_value = _max_phys_cores / 2;
-  if (fallback_value < 2) {
-    fallback_value = 2;
-  }
   _options.num_reader_threads =
-      val < 1 ? fallback_value
+      val <= 1 ? 1
               : (val > _max_phys_cores ? _max_phys_cores : val);
   return *this;
 }
@@ -247,6 +243,10 @@ Grep::base_reader Grep::get_reader() const {
     return std::make_unique<xs::task::reader::FileBlockReaderMMAP>(
         _options.file);
   } else {
+    if (_options.num_reader_threads == 1) {
+      return std::make_unique<xs::task::reader::FileBlockMetaReaderSingle>(
+          _options.file, _options.meta_file_path);
+    }
     if (_options.no_mmap) {
       return std::make_unique<xs::task::reader::FileBlockMetaReader>(
           _options.file, _options.meta_file_path, _options.num_reader_threads);
