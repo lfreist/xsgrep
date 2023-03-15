@@ -16,6 +16,13 @@
       "Sherlock",
       "en.xszst",
       "-m", "en.xszst.meta"
+    ],
+    "xspp -> xs grep --max-readers 2": [
+      "xs",
+      "Sherlock",
+      "en.xszst",
+      "-m", "en.xszst.meta",
+      "--max-readers", "2"
     ]
   },
   "setup_cmd": [
