@@ -3,13 +3,10 @@
   "name": "Compressed input (ZStandard)",
   "description": "",
   "commands": {
-    "zstdcat": [
-      "zstdcat",
-      "en.zst"
-    ],
+    "zstdcat -> jhust_read": "zstdcat en.zst | just_read",
     "just_read": [
       "just_read",
-      "en.lz4"
+      "en.zst"
     ],
     "zstdcat -> GNU grep": "zstdcat en.zst | grep Sherlock",
     "zstdcat -> ripgrep": "zstdcat en.zst | rg Sherlock",

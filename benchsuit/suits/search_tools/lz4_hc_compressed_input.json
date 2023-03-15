@@ -3,10 +3,7 @@
   "name": "Compressed input (LZ4 HC)",
   "description": "",
   "commands": {
-    "lz4cat": [
-      "lz4cat",
-      "en.lz4"
-    ],
+    "lz4cat -> just_read": "lz4cat en.lz4 | just_read",
     "just_read": [
       "just_read",
       "en.lz4"
