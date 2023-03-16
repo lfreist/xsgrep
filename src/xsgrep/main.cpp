@@ -62,7 +62,7 @@ int main(int argc, char** argv) {
   add("threads,j",
       po::value<int>(&grep_options.num_threads)
           ->default_value(0)
-          ->implicit_value(0),
+          ->implicit_value(-1),
       "number of threads");
   add("max-readers",
       po::value<int>(&grep_options.num_reader_threads)->default_value(1),

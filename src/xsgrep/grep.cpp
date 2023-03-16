@@ -164,9 +164,13 @@ Grep& Grep::set_num_threads(int val) {
   if (fallback_value < 2) {
     fallback_value = 2;
   }
-  _options.num_threads = val < 1
-                             ? fallback_value
-                             : (val > _max_phys_cores ? _max_phys_cores : val);
+  if (_options.num_threads > 0) {
+    _options.num_threads = val > _max_phys_cores ? _max_phys_cores : val;
+  } else if (_options.num_threads == 0) {
+    _options.num_threads = fallback_value;
+  } else {  // < 0
+    _options.num_threads = _max_phys_cores;
+  }
   return *this;
 }
 

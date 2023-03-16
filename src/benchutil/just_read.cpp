@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#define BLOCK_SIZE 16777216  // 16 MiB
+#define BLOCK_SIZE 4096
 
 int main(int argc, char** argv) {
   if (argc > 2) {
