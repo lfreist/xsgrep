@@ -25,6 +25,12 @@
       "Sherlock",
       "en.txt"
     ],
+    "xs grep -j": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-j"
+    ],
     "xs grep --no-mmap": [
       "xs",
       "Sherlock",

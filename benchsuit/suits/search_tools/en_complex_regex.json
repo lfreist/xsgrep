@@ -1,39 +1,34 @@
 {
   "timer": "GNU time",
-  "name": "search lines (regex 'She[r ]lock', line number)",
+  "name": "search lines (regex ' [sS][A-Za-z]*k ')",
   "description": "",
   "commands": {
     "GNU grep": [
       "grep",
-      "She[r ]lock",
-      "en.txt",
-      "-n"
+      " [sS][A-Za-z]*k ",
+      "en.txt"
     ],
     "ripgrep": [
       "rg",
-      "She[r ]lock",
-      "en.txt",
-      "-n"
+      " [sS][A-Za-z]*k ",
+      "en.txt"
     ],
     "xs grep -j 1": [
       "xs",
-      "She[r ]lock",
+      " [sS][A-Za-z]*k ",
       "en.txt",
       "-j",
-      "1",
-      "-n"
+      "1"
     ],
     "xs grep": [
       "xs",
-      "She[r ]lock",
-      "en.txt",
-      "-n"
+      " [sS][A-Za-z]*k ",
+      "en.txt"
     ],
     "xs grep -j": [
       "xs",
-      "She[r ]lock",
+      " [sS][A-Za-z]*k ",
       "en.txt",
-      "-n",
       "-j"
     ],
     "xs grep --no-mmap": [
