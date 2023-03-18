@@ -100,7 +100,7 @@ std::vector<Grep::Match> GrepSearcher::process_plain(
   xs::DataChunk tmp_chunk;
   xs::DataChunk* op_chunk = data;
   std::string pattern = _pattern;
-  if (_ignore_case && data->getMetaData().line_mapping_data.empty()) {
+  if (_ignore_case) {
     tmp_chunk = xs::DataChunk(*data);
     // std::transform(data->data(), data->data() + data->size(),
     // tmp_chunk.data(), ::tolower);
