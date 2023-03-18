@@ -8,11 +8,45 @@
       "Sherlock",
       "en.txt"
     ],
+    "xs --max-readers 2": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "--max-readers", "2"
+    ],
+    "xs --no-mmap": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "--no-mmap"
+    ],
+    "xs --max-readers 2 --no-mmap": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "--max-readers", "2",
+      "--no-mmap"
+    ],
     "xs -n": [
       "xs",
       "Sherlock",
       "en.txt",
       "-n"
+    ],
+    "xs -n --max-readers 2 --no-mmap": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-n",
+      "--max-readers", "2",
+      "--no-mmap"
+    ],
+    "xs -n --no-mmap": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-n",
+      "--no-mmap"
     ],
     "xs -n --max-readers 2": [
       "xs",
@@ -37,6 +71,25 @@
       "en.meta",
       "-n",
       "--max-readers", "2"
+    ],
+    "xs -n -m --no-mmap": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-m",
+      "en.meta",
+      "-n",
+      "--no-mmap"
+    ],
+    "xs -n -m --max-readers 2 --no-mmap": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-m",
+      "en.meta",
+      "-n",
+      "--max-readers", "2",
+      "--no-mmap"
     ]
   },
   "setup_cmd": [
