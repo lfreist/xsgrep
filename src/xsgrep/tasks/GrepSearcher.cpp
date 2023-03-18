@@ -102,8 +102,6 @@ std::vector<Grep::Match> GrepSearcher::process_plain(
   std::string pattern = _pattern;
   if (_ignore_case) {
     tmp_chunk = xs::DataChunk(*data);
-    // std::transform(data->data(), data->data() + data->size(),
-    // tmp_chunk.data(), ::tolower);
     xs::utils::str::simd::toLower(tmp_chunk.data(), tmp_chunk.size());
     op_chunk = &tmp_chunk;
     std::transform(_pattern.begin(), _pattern.end(), pattern.begin(),

@@ -6,17 +6,20 @@
     "xs": [
       "xs",
       "Sherlock",
-      "en.txt",
-      "-j",
-      "8"
+      "en.txt"
     ],
     "xs -n": [
       "xs",
       "Sherlock",
       "en.txt",
+      "-n"
+    ],
+    "xs -n --max-readers 2": [
+      "xs",
+      "Sherlock",
+      "en.txt",
       "-n",
-      "-j",
-      "8"
+      "--max-readers", "2"
     ],
     "xs -n -m": [
       "xs",
@@ -24,9 +27,16 @@
       "en.txt",
       "-m",
       "en.meta",
+      "-n"
+    ],
+    "xs -n -m --max-readers 2": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-m",
+      "en.meta",
       "-n",
-      "-j",
-      "8"
+      "--max-readers", "2"
     ]
   },
   "setup_cmd": [
