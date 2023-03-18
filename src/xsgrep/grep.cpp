@@ -176,8 +176,7 @@ Grep& Grep::set_num_threads(int val) {
 
 Grep& Grep::set_num_reader_threads(int val) {
   _options.num_reader_threads =
-      val <= 1 ? 1
-              : (val > _max_phys_cores ? _max_phys_cores : val);
+      val <= 1 ? 1 : (val > _max_phys_cores ? _max_phys_cores : val);
   return *this;
 }
 

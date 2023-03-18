@@ -37,7 +37,7 @@ build_sanitizer: init
 	cmake -B build-address-sanitizer -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_FLAGS="-fsanitize=address" -DCMAKE_CXX_COMPILER=/usr/bin/clang++-15 -DRE2_BUILD_TESTING=off
 	cmake --build build-address-sanitizer -j $(nproc) 2>/dev/null
 
-test:
+test: install
 	python3 testsuit/cmdtest/test_xsgrep.py;
 
 check_style:

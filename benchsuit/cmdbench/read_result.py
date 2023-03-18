@@ -26,9 +26,20 @@ if __name__ == "__main__":
     print(f"Reading data from base directory {path!r}")
     for file, data in get_all_results(path):
         print(f" -> {file}")
+        prev_C = -1
+        prev_T = -1
         for run, value in data["results"].items():
+            C = statistics.mean(value['data']['cpu [s]'])
+            T = statistics.mean(value['data']['wall [s]'])
             print(f"    {run}")
-            print(f"       wall: {statistics.mean(value['data']['wall [s]'])} +/- {statistics.stdev(value['data']['wall [s]'])/math.sqrt(len(value['data']['wall [s]']))}")
-            print(f"       cpu: {statistics.mean(value['data']['cpu [s]'])} +/- {statistics.stdev(value['data']['cpu [s]'])/math.sqrt(len(value['data']['cpu [s]']))}")
-            print(f"       C/T: {statistics.mean(value['data']['cpu [s]'])/statistics.mean(value['data']['wall [s]'])}")
+            print(f"       wall: {T}")
+            print(f"       cpu: {C}")
+            if prev_T >= 0 and prev_C >= 0:
+                dC = C - prev_C
+                dT = prev_T - T
+                if dT == 0:
+                    dT = 0.000000000001
+                print(f"       dC/dT: {dC / dT}")
+            prev_C = C
+            prev_T = T
         print()
