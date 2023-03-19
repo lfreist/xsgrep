@@ -40,12 +40,6 @@
       "-i",
       "-n",
       "-j"
-    ],
-    "xs grep --no-mmap": [
-      "xs",
-      "Sherlock",
-      "en.txt",
-      "--no-mmap"
     ]
   },
   "setup_cmd": [],
