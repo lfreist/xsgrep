@@ -109,7 +109,7 @@ class Grep {
  private:
   [[nodiscard]] std::vector<base_processors> get_processors() const;
 
-  [[nodiscard]] base_reader get_reader() const;
+  [[nodiscard]] base_reader get_reader();
 
   [[nodiscard]] bool use_regex() const;
 
