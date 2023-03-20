@@ -13,7 +13,7 @@ import sys
 import requests
 import base
 
-INPUT_FILE = "en.txt"
+INPUT_FILE = "test/files/sample.txt"
 
 ASCII_PATTERN = "Sherlock"
 
@@ -22,7 +22,7 @@ ASCII_RE = "She[r ]lock"
 EXIT_ON_FAIL = False
 
 
-def test_plain_ascii() -> base.TestSuit:
+def test_literal_ascii() -> base.TestSuit:
     ref_command = base.ReferenceCommand("grep", ["grep", ASCII_PATTERN, INPUT_FILE])
     commands = [
         base.Command("xs", ["xs", ASCII_PATTERN, INPUT_FILE]),
@@ -52,7 +52,7 @@ def test_regex_ascii() -> base.TestSuit:
     )
 
 
-def test_plain_ascii_line_numbers() -> base.TestSuit:
+def test_literal_ascii_line_numbers() -> base.TestSuit:
     ref_command = base.ReferenceCommand("grep", ["grep", ASCII_PATTERN, INPUT_FILE, "-n"])
     commands = [
         base.Command("xs", ["xs", ASCII_PATTERN, INPUT_FILE, "-n"]),
@@ -82,7 +82,7 @@ def test_regex_ascii_line_numbers() -> base.TestSuit:
     )
 
 
-def test_plain_ascii_ignore_case() -> base.TestSuit:
+def test_literal_ascii_ignore_case() -> base.TestSuit:
     ref_command = base.ReferenceCommand("grep", ["grep", ASCII_PATTERN, INPUT_FILE, "-i"])
     commands = [
         base.Command("xs", ["xs", ASCII_PATTERN, INPUT_FILE, "-i"]),
@@ -112,7 +112,7 @@ def test_regex_ascii_ignore_case() -> base.TestSuit:
     )
 
 
-def test_plain_ascii_byte_offsets() -> base.TestSuit:
+def test_literal_ascii_byte_offsets() -> base.TestSuit:
     ref_command = base.ReferenceCommand("grep", ["grep", ASCII_PATTERN, INPUT_FILE, "-b"])
     commands = [
         base.Command("xs", ["xs", ASCII_PATTERN, INPUT_FILE, "-b"]),
@@ -142,7 +142,7 @@ def test_regex_ascii_byte_offsets() -> base.TestSuit:
     )
 
 
-def test_plain_ascii_match_only() -> base.TestSuit:
+def test_literal_ascii_match_only() -> base.TestSuit:
     ref_command = base.ReferenceCommand("grep", ["grep", ASCII_PATTERN, INPUT_FILE, "-o"])
     commands = [
         base.Command("xs", ["xs", ASCII_PATTERN, INPUT_FILE, "-o"]),
@@ -172,7 +172,7 @@ def test_regex_ascii_match_only() -> base.TestSuit:
     )
 
 
-def test_plain_ascii_fixed_string() -> base.TestSuit:
+def test_literal_ascii_fixed_string() -> base.TestSuit:
     ref_command = base.ReferenceCommand("grep", ["grep", ASCII_RE, INPUT_FILE, "-F"])
     commands = [
         base.Command("xs", ["xs", ASCII_RE, INPUT_FILE, "-F"]),
@@ -187,13 +187,84 @@ def test_plain_ascii_fixed_string() -> base.TestSuit:
     )
 
 
-def test_count() -> base.TestSuit:
-    pass
+def test_preprocessed_regex() -> base.TestSuit:
+    ref_command = base.ReferenceCommand("grep", ["grep", ASCII_RE, INPUT_FILE, "-n"])
+    meta = "tmp.meta"
+    lz4 = "xslz4"
+    lz4_meta = "xslz4.meta"
+    lz4hc = "xslz4hc"
+    lz4hc_meta = "xslz4hc.meta"
+    zst = "xszst"
+    zst_meta = "xszst.meta"
+    commands = [
+        base.Command("xs", ["xs", ASCII_RE, INPUT_FILE, "-m", meta, "-n"]),
+        base.Command("xs -j 1", ["xs", ASCII_RE, INPUT_FILE, "-j", "1", "-m", meta, "-n"]),
+        base.Command("xs --max-readers 2", ["xs", ASCII_RE, INPUT_FILE, "--max-readers", "2", "-m", meta, "-n"]),
+        base.Command("xs lz4", ["xs", ASCII_RE, lz4, "-m", lz4_meta, "-n"]),
+        base.Command("xs -j 1 lz4", ["xs", ASCII_RE, lz4, "-j", "1", "-m", lz4_meta, "-n"]),
+        base.Command("xs --max-readers 2 lz4", ["xs", ASCII_RE, lz4, "--max-readers", "2", "-m", lz4_meta, "-n"]),
+        base.Command("xs lz4hc", ["xs", ASCII_RE, lz4hc, "-m", lz4hc_meta, "-n"]),
+        base.Command("xs -j 1 lz4hc", ["xs", ASCII_RE, lz4hc, "-j", "1", "-m", lz4hc_meta, "-n"]),
+        base.Command("xs --max-readers 2 lz4hc", ["xs", ASCII_RE, lz4hc, "--max-readers", "2", "-m", lz4hc_meta, "-n"]),
+        base.Command("xs zst", ["xs", ASCII_RE, zst, "-m", zst_meta, "-n"]),
+        base.Command("xs -j 1 zst", ["xs", ASCII_RE, zst, "-j", "1", "-m", zst_meta, "-n"]),
+        base.Command("xs --max-readers 2 zst", ["xs", ASCII_RE, zst, "--max-readers", "2", "-m", zst_meta, "-n"]),
+    ]
+    return base.TestSuit(
+        "Preprocessed regex search",
+        commands=commands,
+        reference_command=ref_command,
+        exit_on_fail=EXIT_ON_FAIL,
+        setup_commands=[
+            base.Command("xspp meta", ["xspp", INPUT_FILE, "-m", meta]),
+            base.Command("xspp lz4", ["xspp", INPUT_FILE, "-m", lz4_meta, "-o", lz4, "-a", "lz4"]),
+            base.Command("xspp lz4hc", ["xspp", INPUT_FILE, "-m", lz4hc_meta, "-o", lz4hc, "-a", "lz4", "--hc"]),
+            base.Command("xspp zst", ["xspp", INPUT_FILE, "-m", zst_meta, "-o", zst, "-a", "zstd"])
+        ],
+        cleanup_commands=[base.Command("rm", ["rm", meta, lz4, lz4_meta, lz4hc, lz4hc_meta, zst, zst_meta])]
+    )
+
+
+def test_preprocessed_literal() -> base.TestSuit:
+    ref_command = base.ReferenceCommand("grep", ["grep", ASCII_PATTERN, INPUT_FILE, "-n"])
+    meta = "tmp.meta"
+    lz4 = "xslz4"
+    lz4_meta = "xslz4.meta"
+    lz4hc = "xslz4hc"
+    lz4hc_meta = "xslz4hc.meta"
+    zst = "xszst"
+    zst_meta = "xszst.meta"
+    commands = [
+        base.Command("xs", ["xs", ASCII_PATTERN, INPUT_FILE, "-m", meta, "-n"]),
+        base.Command("xs -j 1", ["xs", ASCII_PATTERN, INPUT_FILE, "-j", "1", "-m", meta, "-n"]),
+        base.Command("xs --max-readers 2", ["xs", ASCII_PATTERN, INPUT_FILE, "--max-readers", "2", "-m", meta, "-n"]),
+        base.Command("xs lz4", ["xs", ASCII_PATTERN, lz4, "-m", lz4_meta, "-n"]),
+        base.Command("xs -j 1 lz4", ["xs", ASCII_PATTERN, lz4, "-j", "1", "-m", lz4_meta, "-n"]),
+        base.Command("xs --max-readers 2 lz4", ["xs", ASCII_PATTERN, lz4, "--max-readers", "2", "-m", lz4_meta, "-n"]),
+        base.Command("xs lz4hc", ["xs", ASCII_PATTERN, lz4hc, "-m", lz4hc_meta, "-n"]),
+        base.Command("xs -j 1 lz4hc", ["xs", ASCII_PATTERN, lz4hc, "-j", "1", "-m", lz4hc_meta, "-n"]),
+        base.Command("xs --max-readers 2 lz4hc", ["xs", ASCII_PATTERN, lz4hc, "--max-readers", "2", "-m", lz4hc_meta, "-n"]),
+        base.Command("xs zst", ["xs", ASCII_PATTERN, zst, "-m", zst_meta, "-n"]),
+        base.Command("xs -j 1 zst", ["xs", ASCII_PATTERN, zst, "-j", "1", "-m", zst_meta, "-n"]),
+        base.Command("xs --max-readers 2 zst", ["xs", ASCII_PATTERN, zst, "--max-readers", "2", "-m", zst_meta, "-n"]),
+    ]
+    return base.TestSuit(
+        "Preprocessed literal search",
+        commands=commands,
+        reference_command=ref_command,
+        exit_on_fail=EXIT_ON_FAIL,
+        setup_commands=[
+            base.Command("xspp meta", ["xspp", INPUT_FILE, "-m", meta]),
+            base.Command("xspp lz4", ["xspp", INPUT_FILE, "-m", lz4_meta, "-o", lz4, "-a", "lz4"]),
+            base.Command("xspp lz4hc", ["xspp", INPUT_FILE, "-m", lz4hc_meta, "-o", lz4hc, "-a", "lz4", "--hc"]),
+            base.Command("xspp zst", ["xspp", INPUT_FILE, "-m", zst_meta, "-o", zst, "-a", "zstd"])
+        ],
+        cleanup_commands=[base.Command("rm", ["rm", meta, lz4, lz4_meta, lz4hc, lz4hc_meta, zst, zst_meta])]
+    )
 
 
 def parse_args():
     parser = argparse.ArgumentParser(prog="xs_test", description="Automated test of xs grep")
-    parser.add_argument("input", metavar="INPUT_FILE", help="File to be searched")
     parser.add_argument("--list-benchmarks", action="store_true", help="List available benchmarks by name and exit")
     parser.add_argument("--exit-on-failure", action="store_true", help="Stop testing if a single test fails")
     parser.add_argument("--filter", metavar="FILTER", default="", help="Filter benchmarks by name using regex")
@@ -204,21 +275,22 @@ def parse_args():
 
 if __name__ == "__main__":
     benchmarks = {
-        "xsgrep plain ASCII": test_plain_ascii,
+        "xsgrep literal ASCII": test_literal_ascii,
         "xsgrep regex ASCII": test_regex_ascii,
-        "xsgrep plain ASCII (-b)": test_plain_ascii_byte_offsets,
+        "xsgrep literal ASCII (-b)": test_literal_ascii_byte_offsets,
         "xsgrep regex ASCII (-b)": test_regex_ascii_byte_offsets,
-        "xsgrep plain ASCII (-n)": test_plain_ascii_line_numbers,
+        "xsgrep literal ASCII (-n)": test_literal_ascii_line_numbers,
         "xsgrep regex ASCII (-n)": test_regex_ascii_line_numbers,
-        "xsgrep plain ASCII (-f)": test_plain_ascii_fixed_string,
-        "xsgrep plain ASCII (-i)": test_plain_ascii_ignore_case,
+        "xsgrep literal ASCII (-f)": test_literal_ascii_fixed_string,
+        "xsgrep literal ASCII (-i)": test_literal_ascii_ignore_case,
         "xsgrep regex ASCII (-i)": test_regex_ascii_ignore_case,
-        "xsgrep plain ASCII (-o)": test_plain_ascii_match_only,
+        "xsgrep literal ASCII (-o)": test_literal_ascii_match_only,
         "xsgrep regex ASCII (-o)": test_regex_ascii_match_only,
+        "xsgrep preprocessed literal": test_preprocessed_literal,
+        "xsgrep preprocessed regex": test_preprocessed_regex,
     }
     args = parse_args()
     EXIT_ON_FAIL = args.exit_on_failure
-    INPUT_FILE = args.input
     base.SILENT = args.silent
     if args.list_benchmarks:
         print("The following benchmarks are available:")
