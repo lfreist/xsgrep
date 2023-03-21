@@ -1,35 +1,31 @@
 {
   "timer": "GNU time",
-  "name": "search lines (literal 'Sherlock')",
+  "name": "search lines (literal 'Sherlock', line number, no mmap)",
   "description": "",
   "commands": {
-    "GNU grep": [
-      "grep",
-      "Sherlock",
-      "en.txt"
-    ],
-    "ripgrep": [
-      "rg",
-      "Sherlock",
-      "en.txt"
-    ],
     "xs grep -j 1": [
       "xs",
       "Sherlock",
       "en.txt",
       "-j",
-      "1"
+      "1",
+      "-n",
+      "--no-mmap"
     ],
     "xs grep": [
       "xs",
       "Sherlock",
-      "en.txt"
+      "en.txt",
+      "-n",
+      "--no-mmap"
     ],
     "xs grep -j": [
       "xs",
       "Sherlock",
       "en.txt",
-      "-j"
+      "-n",
+      "-j",
+      "--no-mmap"
     ]
   },
   "setup_cmd": [],

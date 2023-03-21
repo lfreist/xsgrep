@@ -1,35 +1,31 @@
 {
   "timer": "GNU time",
-  "name": "search lines (regex 'She[r ]lock')",
+  "name": "search lines (regex 'She[r ]lock', line number no mmap)",
   "description": "",
   "commands": {
-    "GNU grep": [
-      "grep",
-      "She[r ]lock",
-      "en.txt"
-    ],
-    "ripgrep": [
-      "rg",
-      "She[r ]lock",
-      "en.txt"
-    ],
     "xs grep -j 1": [
       "xs",
       "She[r ]lock",
       "en.txt",
       "-j",
-      "1"
+      "1",
+      "-n",
+      "--no-mmap"
     ],
     "xs grep": [
       "xs",
       "She[r ]lock",
-      "en.txt"
+      "en.txt",
+      "-n",
+      "--no-mmap"
     ],
     "xs grep -j": [
       "xs",
       "She[r ]lock",
       "en.txt",
-      "-j"
+      "-n",
+      "-j",
+      "--no-mmap"
     ]
   },
   "setup_cmd": [],

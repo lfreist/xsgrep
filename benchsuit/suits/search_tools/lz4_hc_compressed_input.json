@@ -23,6 +23,22 @@
       "en.xslz4",
       "-m", "en.xslz4.meta",
       "--max-readers", "2"
+    ],
+    "lz4cat -> xs grep --no-mmap": "lz4cat en.lz4 | xs Sherlock --no-mmap",
+    "xspp -> xs grep --no-mmap": [
+      "xs",
+      "Sherlock",
+      "en.xslz4",
+      "-m", "en.xslz4.meta",
+      "--no-mmap"
+    ],
+    "xspp -> xs grep --max-readers 2 --no-mmap": [
+      "xs",
+      "Sherlock",
+      "en.xslz4",
+      "-m", "en.xslz4.meta",
+      "--max-readers", "2",
+      "--no-mmap"
     ]
   },
   "setup_cmd": [

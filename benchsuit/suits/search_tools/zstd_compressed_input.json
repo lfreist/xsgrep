@@ -3,7 +3,7 @@
   "name": "Compressed input (ZStandard)",
   "description": "",
   "commands": {
-    "zstdcat -> jhust_read": "zstdcat en.zst | just_read",
+    "zstdcat -> just_read": "zstdcat en.zst | just_read",
     "just_read": [
       "just_read",
       "en.zst"
@@ -23,6 +23,22 @@
       "en.xszst",
       "-m", "en.xszst.meta",
       "--max-readers", "2"
+    ],
+    "zstdcat -> xs grep --no-mmap": "zstdcat en.zst | xs Sherlock --no-mmap",
+    "xspp -> xs grep --no-mmap": [
+      "xs",
+      "Sherlock",
+      "en.xszst",
+      "-m", "en.xszst.meta",
+      "--no-mmap"
+    ],
+    "xspp -> xs grep --max-readers 2 --no-mmap": [
+      "xs",
+      "Sherlock",
+      "en.xszst",
+      "-m", "en.xszst.meta",
+      "--max-readers", "2",
+      "--no-mmap"
     ]
   },
   "setup_cmd": [

@@ -1,40 +1,41 @@
 {
   "timer": "GNU time",
-  "name": "search lines (regex ' [sS][A-Za-z]*k ', line number)",
+  "name": "search lines (regex ' [sS][A-Za-z]*k ')",
   "description": "",
   "commands": {
     "GNU grep": [
       "grep",
       " [sS][A-Za-z]*k ",
-      "en.txt",
-      "-n"
+      "en.txt"
     ],
     "ripgrep": [
       "rg",
       " [sS][A-Za-z]*k ",
-      "en.txt",
-      "-n"
+      "en.txt"
     ],
     "xs grep -j 1": [
       "xs",
       " [sS][A-Za-z]*k ",
       "en.txt",
       "-j",
-      "1",
-      "-n"
+      "1"
     ],
     "xs grep": [
       "xs",
       " [sS][A-Za-z]*k ",
-      "en.txt",
-      "-n"
+      "en.txt"
     ],
     "xs grep -j": [
       "xs",
       " [sS][A-Za-z]*k ",
       "en.txt",
-      "-n",
       "-j"
+    ],
+    "xs grep --no-mmap": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "--no-mmap"
     ]
   },
   "setup_cmd": [],
