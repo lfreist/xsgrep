@@ -236,9 +236,6 @@ std::vector<Grep::base_processors> Grep::get_processors() const {
 }
 
 Grep::base_reader Grep::get_reader() {
-  if (_options.ignore_case) {
-    _options.no_mmap = true;
-  }
   if (_options.file.empty() || _options.file == "-") {
     return std::make_unique<xs::task::reader::FileBlockReader>("/dev/stdin");
   }
