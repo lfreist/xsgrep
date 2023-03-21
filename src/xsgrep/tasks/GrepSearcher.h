@@ -27,11 +27,11 @@ class GrepSearcher
    * @param data: data that are searched
    * @return
    */
-  std::vector<Grep::Match> process(xs::DataChunk* data) const override;
+  std::vector<Grep::Match> process(const xs::DataChunk* data) const override;
 
  private:
-  std::vector<Grep::Match> process_regex(xs::DataChunk* data) const;
-  std::vector<Grep::Match> process_plain(xs::DataChunk* data) const;
+  std::vector<Grep::Match> process_regex(const xs::DataChunk* data) const;
+  std::vector<Grep::Match> process_plain(const xs::DataChunk* data) const;
 
   /// search for line numbers
   std::string _pattern;

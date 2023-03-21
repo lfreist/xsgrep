@@ -44,7 +44,7 @@ GrepSearcher::GrepSearcher(std::string pattern, bool byte_offset,
 }
 
 // _____________________________________________________________________________
-std::vector<Grep::Match> GrepSearcher::process(xs::DataChunk* data) const {
+std::vector<Grep::Match> GrepSearcher::process(const xs::DataChunk* data) const {
   INLINE_BENCHMARK_WALL_START(_, "search");
   if (_regex || (_ignore_case && _locale != Grep::Locale::ASCII)) {
     return process_regex(data);
@@ -54,7 +54,7 @@ std::vector<Grep::Match> GrepSearcher::process(xs::DataChunk* data) const {
 
 // _____________________________________________________________________________
 std::vector<Grep::Match> GrepSearcher::process_regex(
-    xs::DataChunk* data) const {
+    const xs::DataChunk* data) const {
   std::vector<uint64_t> byte_offsets =
       _only_matching
           ? xs::search::regex::global_byte_offsets_match(data, *_re_pattern,
@@ -96,9 +96,9 @@ std::vector<Grep::Match> GrepSearcher::process_regex(
 
 // _____________________________________________________________________________
 std::vector<Grep::Match> GrepSearcher::process_plain(
-    xs::DataChunk* data) const {
+    const xs::DataChunk* data) const {
   xs::DataChunk tmp_chunk;
-  xs::DataChunk* op_chunk = data;
+  const xs::DataChunk* op_chunk = data;
   std::string pattern = _pattern;
   if (_ignore_case) {
     tmp_chunk = xs::DataChunk(*data);
