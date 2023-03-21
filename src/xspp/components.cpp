@@ -5,7 +5,7 @@
 
 // ----- MetaDataCreator -------------------------------------------------------
 // _____________________________________________________________________________
-preprocess_result MetaDataCreator::process(xs::DataChunk* data) const {
+preprocess_result MetaDataCreator::process(const xs::DataChunk* data) const {
   return {std::move(data->getMetaData()), std::move(*data)};
 }
 

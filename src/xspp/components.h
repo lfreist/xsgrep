@@ -11,7 +11,7 @@ class MetaDataCreator
     : public xs::task::base::ReturnProcessor<xs::DataChunk, preprocess_result> {
  public:
   MetaDataCreator() = default;
-  preprocess_result process(xs::DataChunk* data) const override;
+  preprocess_result process(const xs::DataChunk* data) const override;
 };
 
 class DataWriter : public xs::result::base::Result<preprocess_result> {
