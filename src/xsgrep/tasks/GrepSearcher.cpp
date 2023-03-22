@@ -44,7 +44,8 @@ GrepSearcher::GrepSearcher(std::string pattern, bool byte_offset,
 }
 
 // _____________________________________________________________________________
-std::vector<Grep::Match> GrepSearcher::process(const xs::DataChunk* data) const {
+std::vector<Grep::Match> GrepSearcher::process(
+    const xs::DataChunk* data) const {
   INLINE_BENCHMARK_WALL_START(_, "search");
   if (_regex || (_ignore_case && _locale != Grep::Locale::ASCII)) {
     return process_regex(data);
