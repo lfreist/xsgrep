@@ -1,0 +1,115 @@
+{
+  "timer": "GNU time",
+  "name": "xs grep threads (LZ4 HC compressed input, no mmap)",
+  "description": "",
+  "commands": {
+    "xs": [
+      "xs",
+      "Sherlock",
+      "en.hc.xslz4",
+      "-m", "en.hc.xslz4.meta",
+      "--no-mmap"
+    ],
+    "xs -j 1": [
+      "xs",
+      "Sherlock",
+      "en.hc.xslz4",
+      "-j",
+      "1",
+      "-m", "en.hc.xslz4.meta",
+      "--no-mmap"
+    ],
+    "xs -j 2": [
+      "xs",
+      "Sherlock",
+      "en.hc.xslz4",
+      "-j",
+      "2",
+      "-m", "en.hc.xslz4.meta",
+      "--no-mmap"
+    ],
+    "xs -j 4": [
+      "xs",
+      "Sherlock",
+      "en.hc.xslz4",
+      "-j",
+      "4",
+      "-m", "en.hc.xslz4.meta",
+      "--no-mmap"
+    ],
+    "xs -j 6": [
+      "xs",
+      "Sherlock",
+      "en.hc.xslz4",
+      "-j",
+      "6",
+      "-m", "en.hc.xslz4.meta",
+      "--no-mmap"
+    ],
+    "xs -j 8": [
+      "xs",
+      "Sherlock",
+      "en.hc.xslz4",
+      "-j",
+      "8",
+      "-m", "en.hc.xslz4.meta",
+      "--no-mmap"
+    ],
+    "xs -j 10": [
+      "xs",
+      "Sherlock",
+      "en.hc.xslz4",
+      "-j",
+      "10",
+      "-m", "en.hc.xslz4.meta",
+      "--no-mmap"
+    ],
+    "xs -j 12": [
+      "xs",
+      "Sherlock",
+      "en.hc.xslz4",
+      "-j",
+      "12",
+      "-m", "en.hc.xslz4.meta",
+      "--no-mmap"
+    ],
+    "xs -j 14": [
+      "xs",
+      "Sherlock",
+      "en.hc.xslz4",
+      "-j",
+      "14",
+      "-m", "en.hc.xslz4.meta",
+      "--no-mmap"
+    ],
+    "xs -j 16": [
+      "xs",
+      "Sherlock",
+      "en.hc.xslz4",
+      "-j",
+      "16",
+      "-m", "en.hc.xslz4.meta",
+      "--no-mmap"
+    ]
+  },
+  "setup_cmd": [
+    [
+      "xspp",
+      "en.txt",
+      "-m",
+      "en.hc.xslz4.meta",
+      "-o",
+      "en.hc.xslz4",
+      "-a",
+      "lz4",
+      "--hc"
+    ]
+  ],
+  "cleanup_cmd": [
+    [
+      "rm",
+      "en.hc.xslz4.meta",
+      "en.hc.xslz4"
+    ]
+  ]
+}

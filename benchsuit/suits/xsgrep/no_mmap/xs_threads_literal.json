@@ -1,0 +1,87 @@
+{
+  "timer": "GNU time",
+  "name": "xsgrep threads (no mmap)",
+  "description": "",
+  "commands": {
+    "xs": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "--no-mmap"
+    ],
+    "xs -j 1": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-j",
+      "1",
+      "--no-mmap"
+    ],
+    "xs -j 2": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-j",
+      "2",
+      "--no-mmap"
+    ],
+    "xs -j 4": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-j",
+      "4",
+      "--no-mmap"
+    ],
+    "xs -j 6": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-j",
+      "6",
+      "--no-mmap"
+    ],
+    "xs -j 8": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-j",
+      "8",
+      "--no-mmap"
+    ],
+    "xs -j 10": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-j",
+      "10",
+      "--no-mmap"
+    ],
+    "xs -j 12": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-j",
+      "12",
+      "--no-mmap"
+    ],
+    "xs -j 14": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-j",
+      "14",
+      "--no-mmap"
+    ],
+    "xs -j 16": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-j",
+      "16",
+      "--no-mmap"
+    ]
+  },
+  "setup_cmd": [],
+  "cleanup_cmd": []
+}
