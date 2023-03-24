@@ -30,6 +30,27 @@
       "She[r ]lock",
       "en.txt",
       "-j"
+    ],
+    "xs grep -j 1 --no-mmap": [
+      "xs",
+      "She[r ]lock",
+      "en.txt",
+      "-j",
+      "1",
+      "--no-mmap"
+    ],
+    "xs grep --no-mmap": [
+      "xs",
+      "She[r ]lock",
+      "en.txt",
+      "--no-mmap"
+    ],
+    "xs grep -j --no-mmap": [
+      "xs",
+      "She[r ]lock",
+      "en.txt",
+      "-j",
+      "--no-mmap"
     ]
   },
   "setup_cmd": [],

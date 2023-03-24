@@ -1,37 +1,37 @@
 {
   "timer": "GNU time",
-  "name": "search lines (literal 'Sherlock', ignore case, line number)",
+  "name": "search lines (literal 'Sherlock' ignore case, line numbers)",
   "description": "",
   "commands": {
     "GNU grep": [
       "grep",
       "Sherlock",
       "en.txt",
-      "-i",
-      "-n"
+      "-n",
+      "-i"
     ],
     "ripgrep": [
       "rg",
       "Sherlock",
       "en.txt",
-      "-i",
-      "-n"
+      "-n",
+      "-i"
     ],
     "xs grep -j 1": [
       "xs",
       "Sherlock",
       "en.txt",
-      "-j",
-      "1",
       "-i",
-      "-n"
+      "-n",
+      "-j",
+      "1"
     ],
     "xs grep": [
       "xs",
       "Sherlock",
       "en.txt",
-      "-i",
-      "-n"
+      "-n",
+      "-i"
     ],
     "xs grep -j": [
       "xs",
@@ -40,6 +40,98 @@
       "-i",
       "-n",
       "-j"
+    ],
+    "xs grep -j 1 --no-mmap": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-i",
+      "-n",
+      "-j",
+      "1",
+      "--no-mmap"
+    ],
+    "xs grep --no-mmap": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-i",
+      "-n",
+      "--no-mmap"
+    ],
+    "xs grep -j --no-mmap": [
+      "xs",
+      "Sherlock",
+      "en.txt",
+      "-i",
+      "-n",
+      "-j",
+      "--no-mmap"
+    ],
+    "GNU grep*": [
+      "grep",
+      "sherlock",
+      "en.txt",
+      "-n",
+      "-i"
+    ],
+    "ripgrep*": [
+      "rg",
+      "sherlock",
+      "en.txt",
+      "-n",
+      "-i"
+    ],
+    "xs grep -j 1*": [
+      "xs",
+      "sherlock",
+      "en.txt",
+      "-i",
+      "-n",
+      "-j",
+      "1"
+    ],
+    "xs grep*": [
+      "xs",
+      "sherlock",
+      "en.txt",
+      "-n",
+      "-i"
+    ],
+    "xs grep -j*": [
+      "xs",
+      "sherlock",
+      "en.txt",
+      "-i",
+      "-n",
+      "-j"
+    ],
+    "xs grep -j 1 --no-mmap*": [
+      "xs",
+      "sherlock",
+      "en.txt",
+      "-i",
+      "-n",
+      "-j",
+      "1",
+      "--no-mmap"
+    ],
+    "xs grep --no-mmap*": [
+      "xs",
+      "sherlock",
+      "en.txt",
+      "-i",
+      "-n",
+      "--no-mmap"
+    ],
+    "xs grep -j --no-mmap*": [
+      "xs",
+      "sherlock",
+      "en.txt",
+      "-i",
+      "-n",
+      "-j",
+      "--no-mmap"
     ]
   },
   "setup_cmd": [],

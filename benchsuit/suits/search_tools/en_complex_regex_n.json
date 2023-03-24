@@ -35,6 +35,30 @@
       "en.txt",
       "-n",
       "-j"
+    ],
+    "xs grep -j 1 --no-mmap": [
+      "xs",
+      " [sS][A-Za-z]*k ",
+      "en.txt",
+      "-j",
+      "1",
+      "-n",
+      "--no-mmap"
+    ],
+    "xs grep --no-mmap": [
+      "xs",
+      " [sS][A-Za-z]*k ",
+      "en.txt",
+      "-n",
+      "--no-mmap"
+    ],
+    "xs grep -j --no-mmap": [
+      "xs",
+      " [sS][A-Za-z]*k ",
+      "en.txt",
+      "-n",
+      "-j",
+      "--no-mmap"
     ]
   },
   "setup_cmd": [],

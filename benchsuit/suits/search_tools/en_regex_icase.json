@@ -1,6 +1,6 @@
 {
   "timer": "GNU time",
-  "name": "search lines (regex 'She[r ]lock', ignore case)",
+  "name": "search lines (regex 'She[r ]lock')",
   "description": "",
   "commands": {
     "GNU grep": [
@@ -19,9 +19,9 @@
       "xs",
       "She[r ]lock",
       "en.txt",
+      "-i",
       "-j",
-      "1",
-      "-i"
+      "1"
     ],
     "xs grep": [
       "xs",
@@ -35,6 +35,30 @@
       "en.txt",
       "-i",
       "-j"
+    ],
+    "xs grep -j 1 --no-mmap": [
+      "xs",
+      "She[r ]lock",
+      "en.txt",
+      "-i",
+      "-j",
+      "1",
+      "--no-mmap"
+    ],
+    "xs grep --no-mmap": [
+      "xs",
+      "She[r ]lock",
+      "en.txt",
+      "-i",
+      "--no-mmap"
+    ],
+    "xs grep -j --no-mmap": [
+      "xs",
+      "She[r ]lock",
+      "en.txt",
+      "-i",
+      "-j",
+      "--no-mmap"
     ]
   },
   "setup_cmd": [],
