@@ -1,7 +1,0 @@
-   time  xspp zstd -> xs grep  xspp lz4 -> xs grep  xspp lz4 hc -> xs grep  \
-0  Wall                 1.838                2.228                   1.676   
-1   CPU                 8.024                7.236                   5.856   
-
-   xspp zstd -> xs grep*  xspp lz4 -> xs grep*  xspp lz4 hc -> xs grep*  
-0                  1.894                 1.634                    1.418  
-1                  7.122                 5.902                    5.114  

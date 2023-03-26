@@ -1,3 +1,0 @@
-   time    grep  grep -n
-0  Wall  25.630   25.612
-1   CPU   8.298   13.470
