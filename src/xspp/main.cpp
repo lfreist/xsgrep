@@ -64,7 +64,7 @@ int main(int argc, char** argv) {
       po::value<int>(&args.num_threads)->default_value(0)->implicit_value(0),
       "size of one chunk that is read");
   add("bytes-nl-distance,d",
-      po::value<uint64_t>(&args.mapping_data_distance)->default_value(500),
+      po::value<uint64_t>(&args.mapping_data_distance)->default_value(16000),
       "number of bytes between new lines that are stored in meta file");
 
   po::variables_map optionsMap;

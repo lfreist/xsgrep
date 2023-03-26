@@ -21,6 +21,7 @@ def get_all_results(path: str):
 
 
 if __name__ == "__main__":
+    pd.set_option('display.max_columns', None)
     if len(sys.argv) > 1:
         path = sys.argv[1]
     else:
