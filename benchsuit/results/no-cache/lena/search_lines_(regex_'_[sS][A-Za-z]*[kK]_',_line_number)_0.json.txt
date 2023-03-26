@@ -1,0 +1,7 @@
+   time  GNU grep  ripgrep  xs grep -j 1  xs grep  xs grep -j  \
+0  Wall    37.786   23.628        16.940    4.556       2.494   
+1   CPU    37.770   23.572        17.216   18.336      19.760   
+
+   xs grep -j 1 --no-mmap  xs grep --no-mmap  xs grep -j --no-mmap  
+0                  15.256              4.084                 3.828  
+1                  19.566             19.558                20.444  

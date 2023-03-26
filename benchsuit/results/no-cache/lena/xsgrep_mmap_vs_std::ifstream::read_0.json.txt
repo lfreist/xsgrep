@@ -1,0 +1,3 @@
+   time     xs  xs --no-mmap  xs -j 1  xs --no-mmap -j 1
+0  Wall  1.604         3.512    1.868              3.516
+1   CPU  4.498         4.574    3.522              4.664
