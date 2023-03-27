@@ -1,0 +1,11 @@
+   time     xs  xs --max-readers 1  xs --max-readers 2  xs --max-readers 4  \
+0  Wall  2.108               2.042               0.570               0.568   
+1   CPU  3.334               3.230               1.726               1.726   
+
+   xs --max-readers 6  xs --max-readers 8  xs --max-readers 10  \
+0               0.574               0.576                 0.57   
+1               1.718               1.718                 1.73   
+
+   xs --max-readers 12  xs --max-readers 14  xs --max-readers 16  
+0                0.572                0.570                0.566  
+1                1.718                1.722                1.722  

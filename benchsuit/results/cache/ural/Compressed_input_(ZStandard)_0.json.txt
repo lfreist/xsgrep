@@ -1,0 +1,15 @@
+   time  zstdcat -> just_read  just_read  zstdcat -> GNU grep  \
+0  Wall                 8.802      0.162                9.438   
+1   CPU                 8.250      0.156                7.646   
+
+   zstdcat -> ripgrep  zstdcat -> xs grep  xspp -> xs grep  \
+0               8.986                8.99            1.644   
+1               7.670                7.95            6.864   
+
+   xspp -> xs grep --max-readers 2  zstdcat -> xs grep --no-mmap  \
+0                            1.624                         8.958   
+1                            6.352                         7.900   
+
+   xspp -> xs grep --no-mmap  xspp -> xs grep --max-readers 2 --no-mmap  
+0                      1.640                                      1.694  
+1                      6.836                                      6.644  

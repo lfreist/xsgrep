@@ -1,0 +1,15 @@
+   time  lz4cat -> just_read  just_read  lz4cat -> GNU grep  \
+0  Wall                8.174      9.416              13.096   
+1   CPU                6.504      1.624               7.896   
+
+   lz4cat -> ripgrep  lz4cat -> xs grep  xspp -> xs grep  \
+0              8.184              8.228            8.862   
+1              6.332              7.586            6.438   
+
+   xspp -> xs grep --max-readers 2  lz4cat -> xs grep --no-mmap  \
+0                           13.856                        8.240   
+1                            6.102                        7.598   
+
+   xspp -> xs grep --no-mmap  xspp -> xs grep --max-readers 2 --no-mmap  
+0                      8.842                                     14.868  
+1                      6.432                                      6.478  

@@ -1,0 +1,15 @@
+   time     xs  xs --max-readers 2  xs --no-mmap  \
+0  Wall  0.416               0.410         1.716   
+1   CPU  1.424               1.414         2.904   
+
+   xs --max-readers 2 --no-mmap  xs -n  xs -n --max-readers 2 --no-mmap  \
+0                         1.682  1.236                            1.790   
+1                         2.830  4.634                            6.136   
+
+   xs -n --no-mmap  xs -n --max-readers 2  xs -n -m  xs -n -m --max-readers 2  \
+0            1.782                  1.256     1.858                     0.494   
+1            6.134                  4.678     3.012                     1.556   
+
+   xs -n -m --no-mmap  xs -n -m --max-readers 2 --no-mmap  
+0               1.870                               1.350  
+1               2.996                               4.364  
