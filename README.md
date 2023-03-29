@@ -14,6 +14,18 @@
 # xsgrep
 A grep like command line text search tool implemented using x-search library
 
+## Build
+```
+git clone https://github.com/lfreist/xsgrep
+cd xsgrep
+make build
+```
+
+## Test
+```
+make test
+```
+
 ## Benchmark
 > **Important:**
 >
