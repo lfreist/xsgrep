@@ -1,12 +1,10 @@
 // Copyright 2023, Leon Freist
 // Author: Leon Freist <freist@informatik.uni-freiburg.de>
 
-#include "grep.h"
-
 #include <xsearch/utils/string_utils.h>
-
-#include "tasks/GrepOutput.h"
-#include "tasks/GrepSearcher.h"
+#include <xsgrep/grep.h>
+#include <xsgrep/tasks/GrepOutput.h>
+#include <xsgrep/tasks/GrepSearcher.h>
 
 Grep::Grep(std::string pattern, std::string file) {
   _options.pattern = std::move(pattern);

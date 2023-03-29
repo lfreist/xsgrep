@@ -8,8 +8,8 @@ else
   INSTALL_DIR="$HOME/.local/bin"
 fi
 
-cp build/src/xsgrep/xs "$INSTALL_DIR/xs"
-cp build/src/xspp/xspp "$INSTALL_DIR/xspp"
+cp build/xs "$INSTALL_DIR/xs"
+cp build/xspp "$INSTALL_DIR/xspp"
 
 if [[ ":$PATH:" != *":$INSTALL_DIR:"* ]]; then
   echo "export PATH=\"$PATH:$INSTALL_DIR\"" >>"$HOME/.bashrc"

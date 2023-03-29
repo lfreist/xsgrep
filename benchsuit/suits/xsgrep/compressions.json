@@ -6,16 +6,16 @@
     "xspp zstd -> xs grep": [
       "xs",
       "Sherlock",
-      "en.xszst",
+      "data.xszst",
       "-m",
-      "en.xszst.meta"
+      "data.xszst.meta"
     ],
     "xspp lz4 -> xs grep": [
       "xs",
       "Sherlock",
-      "en.xslz4",
+      "data.xslz4",
       "-m",
-      "en.xslz4.meta"
+      "data.xslz4.meta"
     ],
     "xspp lz4 hc -> xs grep": [
       "xs",
@@ -27,17 +27,17 @@
     "xspp zstd -> xs grep*": [
       "xs",
       "Sherlock",
-      "en.xszst",
+      "data.xszst",
       "-m",
-      "en.xszst.meta",
+      "data.xszst.meta",
       "--max-readers", "4"
     ],
     "xspp lz4 -> xs grep*": [
       "xs",
       "Sherlock",
-      "en.xslz4",
+      "data.xslz4",
       "-m",
-      "en.xslz4.meta",
+      "data.xslz4.meta",
       "--max-readers", "4"
     ],
     "xspp lz4 hc -> xs grep*": [
@@ -52,27 +52,27 @@
   "setup_cmd": [
     [
       "xspp",
-      "en.txt",
+      "data.txt",
       "-m",
-      "en.xszst.meta",
+      "data.xszst.meta",
       "-o",
-      "en.xszst",
+      "data.xszst",
       "-a",
       "zstd"
     ],
     [
       "xspp",
-      "en.txt",
+      "data.txt",
       "-m",
-      "en.xslz4.meta",
+      "data.xslz4.meta",
       "-o",
-      "en.xslz4",
+      "data.xslz4",
       "-a",
       "lz4"
     ],
     [
       "xspp",
-      "en.txt",
+      "data.txt",
       "-m",
       "en.hc.xslz4.meta",
       "-o",
@@ -85,10 +85,10 @@
   "cleanup_cmd": [
     [
       "rm",
-      "en.xszst",
-      "en.xszst.meta",
-      "en.xslz4",
-      "en.xslz4.meta",
+      "data.xszst",
+      "data.xszst.meta",
+      "data.xslz4",
+      "data.xslz4.meta",
       "en.hc.xslz4",
       "en.hc.xslz4.meta"
     ]

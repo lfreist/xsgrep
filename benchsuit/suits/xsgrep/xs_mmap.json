@@ -6,25 +6,25 @@
     "xs": [
       "xs",
       "Sherlock",
-      "en.txt"
+      "data.txt"
     ],
     "xs --no-mmap": [
       "xs",
       "Sherlock",
-      "en.txt",
+      "data.txt",
       "--no-mmap"
     ],
     "xs -j 1": [
       "xs",
       "Sherlock",
-      "en.txt",
+      "data.txt",
       "-j",
       "2"
     ],
     "xs --no-mmap -j 1": [
       "xs",
       "Sherlock",
-      "en.txt",
+      "data.txt",
       "-j",
       "2",
       "--no-mmap"

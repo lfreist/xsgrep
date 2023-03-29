@@ -1,1 +1,0 @@
-add_executable(just_read just_read.cpp)

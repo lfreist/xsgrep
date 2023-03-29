@@ -14,29 +14,29 @@
     "xspp -> xs grep": [
       "xs",
       "Sherlock",
-      "en.xszst",
-      "-m", "en.xszst.meta"
+      "data.xszst",
+      "-m", "data.xszst.meta"
     ],
     "xspp -> xs grep --max-readers 2": [
       "xs",
       "Sherlock",
-      "en.xszst",
-      "-m", "en.xszst.meta",
+      "data.xszst",
+      "-m", "data.xszst.meta",
       "--max-readers", "2"
     ],
     "zstdcat -> xs grep --no-mmap": "zstdcat en.zst | xs Sherlock --no-mmap",
     "xspp -> xs grep --no-mmap": [
       "xs",
       "Sherlock",
-      "en.xszst",
-      "-m", "en.xszst.meta",
+      "data.xszst",
+      "-m", "data.xszst.meta",
       "--no-mmap"
     ],
     "xspp -> xs grep --max-readers 2 --no-mmap": [
       "xs",
       "Sherlock",
-      "en.xszst",
-      "-m", "en.xszst.meta",
+      "data.xszst",
+      "-m", "data.xszst.meta",
       "--max-readers", "2",
       "--no-mmap"
     ]
@@ -44,15 +44,15 @@
   "setup_cmd": [
     [
       "zstd",
-      "en.txt",
+      "data.txt",
       "-o", "en.zst",
       "-f"
     ],
     [
       "xspp",
-      "en.txt",
-      "-m", "en.xszst.meta",
-      "-o", "en.xszst",
+      "data.txt",
+      "-m", "data.xszst.meta",
+      "-o", "data.xszst",
       "-a", "zstd"
     ]
   ],
@@ -60,8 +60,8 @@
     [
       "rm",
       "en.zst",
-      "en.xszst",
-      "en.xszst.meta"
+      "data.xszst",
+      "data.xszst.meta"
     ]
   ]
 }

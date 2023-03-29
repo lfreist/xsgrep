@@ -6,12 +6,12 @@
     "rg": [
       "rg",
       "Sherlock",
-      "en.txt"
+      "data.txt"
     ],
     "rg -n": [
       "rg",
       "Sherlock",
-      "en.txt",
+      "data.txt",
       "-n"
     ]
   },

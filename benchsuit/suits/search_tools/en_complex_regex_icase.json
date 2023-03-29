@@ -6,19 +6,19 @@
     "GNU grep": [
       "grep",
       " [sS][A-Za-z]*k ",
-      "en.txt",
+      "data.txt",
       "-i"
     ],
     "ripgrep": [
       "rg",
       " [sS][A-Za-z]*k ",
-      "en.txt",
+      "data.txt",
       "-i"
     ],
     "xs grep -j 1": [
       "xs",
       " [sS][A-Za-z]*k ",
-      "en.txt",
+      "data.txt",
       "-j",
       "1",
       "-i"
@@ -26,20 +26,20 @@
     "xs grep": [
       "xs",
       " [sS][A-Za-z]*k ",
-      "en.txt",
+      "data.txt",
       "-i"
     ],
     "xs grep -j": [
       "xs",
       " [sS][A-Za-z]*k ",
-      "en.txt",
+      "data.txt",
       "-i",
       "-j"
     ],
     "xs grep -j 1 --no-mmap": [
       "xs",
       " [sS][A-Za-z]*k ",
-      "en.txt",
+      "data.txt",
       "-j",
       "1",
       "-i",
@@ -48,14 +48,14 @@
     "xs grep --no-mmap": [
       "xs",
       " [sS][A-Za-z]*k ",
-      "en.txt",
+      "data.txt",
       "-i",
       "--no-mmap"
     ],
     "xs grep -j --no-mmap": [
       "xs",
       " [sS][A-Za-z]*k ",
-      "en.txt",
+      "data.txt",
       "-i",
       "-j",
       "--no-mmap"

@@ -6,12 +6,12 @@
     "grep": [
       "grep",
       "Sherlock",
-      "en.txt"
+      "data.txt"
     ],
     "grep -n": [
       "grep",
       "Sherlock",
-      "en.txt",
+      "data.txt",
       "-n"
     ]
   },

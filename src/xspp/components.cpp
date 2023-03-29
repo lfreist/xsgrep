@@ -1,7 +1,7 @@
 // Copyright 2023, Leon Freist
 // Author: Leon Freist <freist@informatik.uni-freiburg.de>
 
-#include "./components.h"
+#include <xsgrep/xspp/components.h>
 
 // ----- MetaDataCreator -------------------------------------------------------
 // _____________________________________________________________________________

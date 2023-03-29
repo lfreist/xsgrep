@@ -40,7 +40,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     URLs = {
-        "en": "https://object.pouta.csc.fi/OPUS-OpenSubtitles/v2016/mono/en.txt.gz",  # english, plain ASCII
+        "en": "https://object.pouta.csc.fi/OPUS-OpenSubtitles/v2016/mono/data.txt.gz",  # english, plain ASCII
         "el": "https://object.pouta.csc.fi/OPUS-OpenSubtitles/v2016/mono/el.txt.gz",  # greek, pure UTF-8 multi char
         "es": "https://object.pouta.csc.fi/OPUS-OpenSubtitles/v2016/mono/es.txt.gz",  # spanish, mixed
     }

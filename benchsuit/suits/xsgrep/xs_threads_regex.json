@@ -6,13 +6,13 @@
     "xs": [
       "xs",
       " [sS][A-Za-z]*[kK] ",
-      "en.txt",
+      "data.txt",
       "-i"
     ],
     "xs -j 1": [
       "xs",
       " [sS][A-Za-z]*[kK] ",
-      "en.txt",
+      "data.txt",
       "-j",
       "1",
       "-i"
@@ -20,7 +20,7 @@
     "xs -j 2": [
       "xs",
       " [sS][A-Za-z]*[kK] ",
-      "en.txt",
+      "data.txt",
       "-j",
       "2",
       "-i"
@@ -28,7 +28,7 @@
     "xs -j 4": [
       "xs",
       " [sS][A-Za-z]*[kK] ",
-      "en.txt",
+      "data.txt",
       "-j",
       "4",
       "-i"
@@ -36,7 +36,7 @@
     "xs -j 6": [
       "xs",
       " [sS][A-Za-z]*[kK] ",
-      "en.txt",
+      "data.txt",
       "-j",
       "6",
       "-i"
@@ -44,7 +44,7 @@
     "xs -j 8": [
       "xs",
       " [sS][A-Za-z]*[kK] ",
-      "en.txt",
+      "data.txt",
       "-j",
       "8",
       "-i"
@@ -52,7 +52,7 @@
     "xs -j 10": [
       "xs",
       " [sS][A-Za-z]*[kK] ",
-      "en.txt",
+      "data.txt",
       "-j",
       "10",
       "-i"
@@ -60,7 +60,7 @@
     "xs -j 12": [
       "xs",
       " [sS][A-Za-z]*[kK] ",
-      "en.txt",
+      "data.txt",
       "-j",
       "12",
       "-i"
@@ -68,7 +68,7 @@
     "xs -j 14": [
       "xs",
       " [sS][A-Za-z]*[kK] ",
-      "en.txt",
+      "data.txt",
       "-j",
       "14",
       "-i"
@@ -76,7 +76,7 @@
     "xs -j 16": [
       "xs",
       " [sS][A-Za-z]*[kK] ",
-      "en.txt",
+      "data.txt",
       "-j",
       "16",
       "-i"

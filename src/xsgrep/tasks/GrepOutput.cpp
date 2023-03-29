@@ -1,9 +1,8 @@
 // Copyright 2023, Leon Freist
 // Author: Leon Freist <freist@informatik.uni-freiburg.de>
 
-#include "./GrepOutput.h"
-
 #include <xsearch/utils/InlineBench.h>
+#include <xsgrep/tasks/GrepOutput.h>
 
 // ===== GrepOutput ============================================================
 // _____________________________________________________________________________

@@ -14,29 +14,29 @@
     "xspp -> xs grep": [
       "xs",
       "Sherlock",
-      "en.xslz4",
-      "-m", "en.xslz4.meta"
+      "data.xslz4",
+      "-m", "data.xslz4.meta"
     ],
     "xspp -> xs grep --max-readers 2": [
       "xs",
       "Sherlock",
-      "en.xslz4",
-      "-m", "en.xslz4.meta",
+      "data.xslz4",
+      "-m", "data.xslz4.meta",
       "--max-readers", "2"
     ],
     "lz4cat -> xs grep --no-mmap": "lz4cat en.lz4 | xs Sherlock --no-mmap",
     "xspp -> xs grep --no-mmap": [
       "xs",
       "Sherlock",
-      "en.xslz4",
-      "-m", "en.xslz4.meta",
+      "data.xslz4",
+      "-m", "data.xslz4.meta",
       "--no-mmap"
     ],
     "xspp -> xs grep --max-readers 2 --no-mmap": [
       "xs",
       "Sherlock",
-      "en.xslz4",
-      "-m", "en.xslz4.meta",
+      "data.xslz4",
+      "-m", "data.xslz4.meta",
       "--max-readers", "2",
       "--no-mmap"
     ]
@@ -44,15 +44,15 @@
   "setup_cmd": [
     [
       "lz4",
-      "en.txt",
+      "data.txt",
       "en.lz4",
       "-f"
     ],
     [
       "xspp",
-      "en.txt",
-      "-m", "en.xslz4.meta",
-      "-o", "en.xslz4",
+      "data.txt",
+      "-m", "data.xslz4.meta",
+      "-o", "data.xslz4",
       "-a", "lz4"
     ]
   ],
@@ -60,8 +60,8 @@
     [
       "rm",
       "en.lz4",
-      "en.xslz4",
-      "en.xslz4.meta"
+      "data.xslz4",
+      "data.xslz4.meta"
     ]
   ]
 }

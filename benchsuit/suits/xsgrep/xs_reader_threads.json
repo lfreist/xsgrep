@@ -6,14 +6,14 @@
     "xs": [
       "xs",
       "Sherlock",
-      "en.txt",
+      "data.txt",
       "-m",
       "en.meta"
     ],
     "xs --max-readers 1": [
       "xs",
       "Sherlock",
-      "en.txt",
+      "data.txt",
       "--max-readers",
       "1",
       "-m",
@@ -22,7 +22,7 @@
     "xs --max-readers 2": [
       "xs",
       "Sherlock",
-      "en.txt",
+      "data.txt",
       "--max-readers",
       "2",
       "-m",
@@ -31,7 +31,7 @@
     "xs --max-readers 4": [
       "xs",
       "Sherlock",
-      "en.txt",
+      "data.txt",
       "--max-readers",
       "4",
       "-m",
@@ -40,7 +40,7 @@
     "xs --max-readers 6": [
       "xs",
       "Sherlock",
-      "en.txt",
+      "data.txt",
       "--max-readers",
       "6",
       "-m",
@@ -49,7 +49,7 @@
     "xs --max-readers 8": [
       "xs",
       "Sherlock",
-      "en.txt",
+      "data.txt",
       "--max-readers",
       "8",
       "-m",
@@ -58,7 +58,7 @@
     "xs --max-readers 10": [
       "xs",
       "Sherlock",
-      "en.txt",
+      "data.txt",
       "--max-readers",
       "10",
       "-m",
@@ -67,7 +67,7 @@
     "xs --max-readers 12": [
       "xs",
       "Sherlock",
-      "en.txt",
+      "data.txt",
       "--max-readers",
       "12",
       "-m",
@@ -76,7 +76,7 @@
     "xs --max-readers 14": [
       "xs",
       "Sherlock",
-      "en.txt",
+      "data.txt",
       "--max-readers",
       "14",
       "-m",
@@ -85,7 +85,7 @@
     "xs --max-readers 16": [
       "xs",
       "Sherlock",
-      "en.txt",
+      "data.txt",
       "--max-readers",
       "16",
       "-m",
@@ -95,7 +95,7 @@
   "setup_cmd": [
     [
       "xspp",
-      "en.txt",
+      "data.txt",
       "-m",
       "en.meta"
     ]

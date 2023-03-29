@@ -85,7 +85,7 @@
   "setup_cmd": [
     [
       "xspp",
-      "en.txt",
+      "data.txt",
       "-m",
       "en.hc.xslz4.meta",
       "-o",

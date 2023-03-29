@@ -6,35 +6,35 @@
     "GNU grep": [
       "grep",
       "Sherlock",
-      "en.txt"
+      "data.txt"
     ],
     "ripgrep": [
       "rg",
       "Sherlock",
-      "en.txt"
+      "data.txt"
     ],
     "xs grep -j 1": [
       "xs",
       "Sherlock",
-      "en.txt",
+      "data.txt",
       "-j",
       "1"
     ],
     "xs grep": [
       "xs",
       "Sherlock",
-      "en.txt"
+      "data.txt"
     ],
     "xs grep -j": [
       "xs",
       "Sherlock",
-      "en.txt",
+      "data.txt",
       "-j"
     ],
     "xs grep -j 1 --no-mmap": [
       "xs",
       "Sherlock",
-      "en.txt",
+      "data.txt",
       "-j",
       "1",
       "--no-mmap"
@@ -42,48 +42,48 @@
     "xs grep --no-mmap": [
       "xs",
       "Sherlock",
-      "en.txt",
+      "data.txt",
       "--no-mmap"
     ],
     "xs grep -j --no-mmap": [
       "xs",
       "Sherlock",
-      "en.txt",
+      "data.txt",
       "-j",
       "--no-mmap"
     ],
     "GNU grep*": [
       "grep",
       "sherlock",
-      "en.txt"
+      "data.txt"
     ],
     "ripgrep*": [
       "rg",
       "sherlock",
-      "en.txt"
+      "data.txt"
     ],
     "xs grep -j 1*": [
       "xs",
       "sherlock",
-      "en.txt",
+      "data.txt",
       "-j",
       "1"
     ],
     "xs grep*": [
       "xs",
       "sherlock",
-      "en.txt"
+      "data.txt"
     ],
     "xs grep -j*": [
       "xs",
       "sherlock",
-      "en.txt",
+      "data.txt",
       "-j"
     ],
     "xs grep -j 1 --no-mmap*": [
       "xs",
       "sherlock",
-      "en.txt",
+      "data.txt",
       "-j",
       "1",
       "--no-mmap"
@@ -91,13 +91,13 @@
     "xs grep --no-mmap*": [
       "xs",
       "sherlock",
-      "en.txt",
+      "data.txt",
       "--no-mmap"
     ],
     "xs grep -j --no-mmap*": [
       "xs",
       "sherlock",
-      "en.txt",
+      "data.txt",
       "-j",
       "--no-mmap"
     ]

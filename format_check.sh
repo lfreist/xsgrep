@@ -2,8 +2,8 @@
 
 printf "Checking sources for code style\n"
 SOURCE_FILES=()
-# find all h/c/hpp/cpp files excluding the ad_utility directory
-find ./src/ ./test/ -not \( -path ./x-search -prune \) -regextype egrep -regex '.*\.(h|c)(pp|xx)?$' -print0 >sourcelist
+# find all h/c/hpp/cpp files
+find ./src/ ./test/ xs.cpp xspp.cpp -not \( -path ./x-search -prune \) -regextype egrep -regex '.*\.(h|c)(pp|xx)?$' -print0 >sourcelist
 
 while IFS= read -r -d $'\0'; do
   SOURCE_FILES+=("$REPLY")
