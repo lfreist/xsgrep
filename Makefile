@@ -44,8 +44,13 @@ check_style:
 	bash ./format_check.sh
 
 benchmark: install_benchmark install
-	python3 benchsuit/cmdbench/main.py --config benchsuit/suits --iterations 5 --output benchsuit/results/cache/$$(hostname) --cwd sample_data/ --sleep 10
-	python3 benchsuit/cmdbench/main.py --config benchsuit/suits --iterations 5 --output benchsuit/results/no-cache/$$(hostname) --drop-cache "$$HOME/drop_cache" --cwd sample_data/ --sleep 10
+	python3 benchsuit/bench_setup.py
+	python3 benchsuit/cmdbench/main.py --config benchsuit/suits --iterations 5 --output benchsuit/results/en/cache/$$(hostname) --cwd sample_data/en/
+	python3 benchsuit/cmdbench/main.py --config benchsuit/suits --iterations 5 --output benchsuit/results/en/no-cache/$$(hostname) --drop-cache "$$HOME/drop_cache" --cwd sample_data/en/
+	python3 benchsuit/cmdbench/main.py --config benchsuit/suits --iterations 5 --output benchsuit/results/el/cache/$$(hostname) --cwd sample_data/el/
+	python3 benchsuit/cmdbench/main.py --config benchsuit/suits --iterations 5 --output benchsuit/results/el/no-cache/$$(hostname) --drop-cache "$$HOME/drop_cache" --cwd sample_data/el/
+	python3 benchsuit/cmdbench/main.py --config benchsuit/suits --iterations 5 --output benchsuit/results/es/cache/$$(hostname) --cwd sample_data/es/
+	python3 benchsuit/cmdbench/main.py --config benchsuit/suits --iterations 5 --output benchsuit/results/es/no-cache/$$(hostname) --drop-cache "$$HOME/drop_cache" --cwd sample_data/es/
 
 install_benchmark: build_benchmark
 	cp build-benchmark/src/xsgrep/xs $$HOME/.local/bin/benched_xs
