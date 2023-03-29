@@ -18,7 +18,7 @@ def download(url: str, dest: str) -> None:
         num_bytes_read = 0
         name = dest.split('/')[-1]
         for chunk in data.iter_content(chunk_size=32768):
-            log(f"{dest}: {num_bytes_read / 1000000:.2f} MiB written", end='\r', flush=True)
+            log(f"{num_bytes_read / 1000000:.2f} MiB written", end='\r', flush=True)
             f.write(chunk)
             num_bytes_read += len(chunk)
         print()
@@ -39,19 +39,22 @@ if __name__ == "__main__":
                         help="Destination directory for downloaded files")
     args = parser.parse_args()
 
-    URLs = [
-        "https://object.pouta.csc.fi/OPUS-OpenSubtitles/v2016/mono/en.txt.gz",  # english, plain ASCII
-        # "https://object.pouta.csc.fi/OPUS-OpenSubtitles/v2016/mono/el.txt.gz",  # greek, pure UTF-8 multi char
-        # "https://object.pouta.csc.fi/OPUS-OpenSubtitles/v2016/mono/es.txt.gz",  # spanish, mixed
-    ]
+    URLs = {
+        "en": "https://object.pouta.csc.fi/OPUS-OpenSubtitles/v2016/mono/en.txt.gz",  # english, plain ASCII
+        "el": "https://object.pouta.csc.fi/OPUS-OpenSubtitles/v2016/mono/el.txt.gz",  # greek, pure UTF-8 multi char
+        "es": "https://object.pouta.csc.fi/OPUS-OpenSubtitles/v2016/mono/es.txt.gz",  # spanish, mixed
+    }
 
-    if not os.path.exists(args.dir):
-        os.makedirs(args.dir)
-    for url in URLs:
-        file = url.split('/')[-1]
-        file_path = os.path.join(args.dir, file)
-        txt_file = os.path.join(args.dir, '.'.join(file.split('.')[:-1]))
+    for folder, url in URLs.items():
+        if not os.path.exists(os.path.join(args.dir, folder)):
+            os.makedirs(os.path.join(args.dir, folder))
+        file_path = os.path.join(args.dir, folder, "data.txt.gz")
+        txt_file = os.path.join(args.dir, folder, "data.txt")
         if not os.path.exists(txt_file):
             if not os.path.exists(file_path):
+                print(f" downloading {url!r} to {file_path!r}...", end=" ")
                 download(url, file_path)
+                print("DONE")
+            print(f" decompressing {file_path!r} to {txt_file!r}...", end=" ")
             decompress(file_path)
+            print("DONE")
