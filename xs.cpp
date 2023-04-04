@@ -14,7 +14,7 @@ void print_version() {
   std::cout << "Copyright (C) 2023 Leon Freist\n";
   std::cout << "Written in the scope of the Undergraduate Thesis of Leon "
                "Freist at the chair of Algorithms and Datastructures "
-               "(Albert-Ludwigs_Universität Freiburg).\n";
+               "(University of Freiburg).\n";
   std::cout << "Examiner:   Prof. Dr. Hannah Bast\n";
   std::cout << "Supervisor: Johannes Kalmbach\n";
   std::cout << '\n';
