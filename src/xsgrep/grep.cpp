@@ -3,18 +3,58 @@
 
 #include <xsearch/utils/string_utils.h>
 #include <xsgrep/grep.h>
-#include <xsgrep/tasks/GrepOutput.h>
+#include <xsgrep/tasks/GrepResult.h>
 #include <xsgrep/tasks/GrepSearcher.h>
+
+// ===== Helper functions ======================================================
+/**
+ * Helper function that recursively traverses directories and returns a list of
+ *  all files.
+ * @param in_path
+ * @param files
+ * @param depth
+ */
+void get_files_recursive(const std::filesystem::path& in_path,
+                         std::vector<std::string>* files, int depth) {
+  if (std::filesystem::is_regular_file(in_path)) {
+    files->push_back(std::filesystem::path(in_path));
+  }
+  if (depth == 0) {
+    return;
+  }
+  if (std::filesystem::is_directory(in_path)) {
+    for (auto& obj : std::filesystem::directory_iterator(in_path)) {
+      get_files_recursive(obj, files, depth - 1);
+    }
+  }
+}
+
+/**
+ * Get a vector of all files within a directory
+ * @param in_path start directory
+ * @param max_depth recursion depth
+ * @return
+ */
+std::vector<std::string> get_files(const std::filesystem::path& in_path,
+                                   int max_depth) {
+  if (in_path.empty() || in_path == "-") {
+    return {"-"};
+  }
+  std::vector<std::string> files;
+  get_files_recursive(in_path, &files, max_depth);
+  return files;
+}
+// =============================================================================
 
 Grep::Grep(std::string pattern, std::string file) {
   _options.pattern = std::move(pattern);
-  _options.file = std::move(file);
+  set_file(std::move(file));
 }
 
 Grep::Grep(std::string pattern, std::string file, Grep::Options options)
     : _options(std::move(options)) {
   _options.pattern = std::move(pattern);
-  _options.file = std::move(file);
+  set_file(std::move(file));
   // these three members need to be set using setter method in case they are set
   //  to default values
   set_colored_output(_options.color);
@@ -30,55 +70,83 @@ Grep::Grep(Options options) : _options(std::move(options)) {
   set_num_threads(_options.num_threads);
   set_locale(_options.locale);
   set_num_reader_threads(_options.num_reader_threads);
+  set_file(_options.file);
 }
 
-uint64_t Grep::count() {
-  auto searcher = std::make_unique<xs::task::searcher::LineCounter>(
-      _options.pattern, use_regex(), _options.ignore_case,
-      _options.locale == Grep::Locale::UTF_8);
-  auto executor =
-      xs::Executor<xs::DataChunk, xs::result::base::CountResult, uint64_t>(
-          _options.num_threads, get_reader(), get_processors(),
-          std::move(searcher),
-          std::make_unique<xs::result::base::CountResult>());
-  executor.join();
-  return executor.getResult()->size();
+std::vector<std::pair<std::string, uint64_t>> Grep::count() {
+  std::vector<std::pair<std::string, uint64_t>> result;
+  for (const auto& file : get_files(_options.file)) {
+    auto executor =
+        xs::Executor<xs::DataChunk, xs::result::base::CountResult, uint64_t>(
+            _options.num_threads, get_reader(file), get_processors(),
+            std::make_unique<xs::task::searcher::LineCounter>(
+                _options.pattern, use_regex(), _options.ignore_case,
+                _options.locale == Grep::Locale::UTF_8),
+            std::make_unique<xs::result::base::CountResult>());
+    executor.join();
+    result.emplace_back(file, executor.getResult()->size());
+  }
+  return result;
 }
 
-std::vector<Grep::Match> Grep::search() {
-  auto searcher = std::make_unique<GrepSearcher>(
-      _options.pattern, _options.byte_offset, _options.line_number,
-      _options.only_matching, use_regex(), _options.ignore_case,
-      _options.locale);
-  auto result = std::make_unique<GrepOutput>(_options);
-  auto executor =
-      xs::Executor<xs::DataChunk, GrepOutput, std::vector<Grep::Match>>(
-          _options.num_threads, get_reader(), get_processors(),
-          std::move(searcher), std::move(result));
-  executor.join();
-  return {};
+std::vector<std::pair<std::string, std::vector<Grep::Match>>> Grep::search() {
+  std::vector<std::pair<std::string, std::vector<Grep::Match>>> result;
+  for (const auto& file : get_files(_options.file)) {
+    auto executor =
+        xs::Executor<xs::DataChunk, GrepContainer, std::vector<Grep::Match>>(
+            _options.num_threads, get_reader(file), get_processors(),
+            std::make_unique<GrepSearcher>(
+                _options.pattern, _options.byte_offset, _options.line_number,
+                _options.only_matching, use_regex(), _options.ignore_case,
+                _options.locale),
+            std::make_unique<GrepContainer>());
+    executor.join();
+    result.emplace_back(file, executor.getResult()->copyResultSafe());
+  }
+  return result;
 }
 
 void Grep::write(std::ostream* stream) {
   if (_options.count) {
-    *stream << count() << '\n';
+    for (const auto& res : count()) {
+      if (_options.print_file_path) {
+        if (_options.color == Grep::Color::ON) {
+          *stream << MAGENTA << res.first << CYAN << ':';
+        } else {
+          *stream << res.first << ':';
+        }
+      }
+      *stream << res.second << '\n';
+    }
   } else {
-    auto searcher = std::make_unique<GrepSearcher>(
-        _options.pattern, _options.byte_offset, _options.line_number,
-        _options.only_matching, use_regex(), _options.ignore_case,
-        _options.locale);
-    auto result = std::make_unique<GrepOutput>(_options, *stream);
-    auto executor =
-        xs::Executor<xs::DataChunk, GrepOutput, std::vector<Grep::Match>,
-                     Grep::Options, std::ostream&>(
-            _options.num_threads, get_reader(), get_processors(),
-            std::move(searcher), std::move(result));
-    executor.join();
+    if (!(_options.file.empty() || _options.file == "-" ||
+          std::filesystem::is_regular_file(_options.file) ||
+          std::filesystem::is_directory(_options.file))) {
+      std::cerr << _options.file << ": No such file or directory\n";
+      return;
+    }
+    for (const auto& file : get_files(_options.file)) {
+      auto options = _options;
+      options.file = file;
+      auto executor =
+          xs::Executor<xs::DataChunk, GrepOutput, std::vector<Grep::Match>,
+                       Grep::Options, std::ostream&>(
+              options.num_threads, get_reader(file), get_processors(),
+              std::make_unique<GrepSearcher>(
+                  options.pattern, options.byte_offset, options.line_number,
+                  options.only_matching, use_regex(), options.ignore_case,
+                  options.locale),
+              std::make_unique<GrepOutput>(options, *stream));
+      executor.join();
+    }
   }
 }
 
 Grep& Grep::set_file(std::string file) {
   _options.file = std::move(file);
+  if (std::filesystem::is_directory(_options.file)) {
+    _options.print_file_path = true;
+  }
   return *this;
 }
 
@@ -236,27 +304,26 @@ std::vector<Grep::base_processors> Grep::get_processors() const {
   return ret;
 }
 
-Grep::base_reader Grep::get_reader() {
-  if (_options.file.empty() || _options.file == "-") {
+Grep::base_reader Grep::get_reader(const std::string& file) {
+  if (file.empty() || file == "-") {
     return std::make_unique<xs::task::reader::FileBlockReader>("/dev/stdin");
   }
   if (_options.meta_file_path.empty()) {
     if (_options.no_mmap) {
-      return std::make_unique<xs::task::reader::FileBlockReader>(_options.file);
+      return std::make_unique<xs::task::reader::FileBlockReader>(file);
     }
-    return std::make_unique<xs::task::reader::FileBlockReaderMMAP>(
-        _options.file);
+    return std::make_unique<xs::task::reader::FileBlockReaderMMAP>(file);
   } else {
     if (_options.num_reader_threads == 1) {
       return std::make_unique<xs::task::reader::FileBlockMetaReaderSingle>(
-          _options.file, _options.meta_file_path);
+          file, _options.meta_file_path);
     }
     if (_options.no_mmap) {
       return std::make_unique<xs::task::reader::FileBlockMetaReader>(
-          _options.file, _options.meta_file_path, _options.num_reader_threads);
+          file, _options.meta_file_path, _options.num_reader_threads);
     } else {
       return std::make_unique<xs::task::reader::FileBlockMetaReaderMMAP>(
-          _options.file, _options.meta_file_path, _options.num_reader_threads);
+          file, _options.meta_file_path, _options.num_reader_threads);
     }
   }
 }

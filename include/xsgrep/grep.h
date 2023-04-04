@@ -5,6 +5,14 @@
 
 #include <xsearch/xsearch.h>
 
+#include <filesystem>
+
+// ===== Helper functions ======================================================
+std::vector<std::string> get_files(const std::filesystem::path& in_path,
+                                   int max_depth = -1);
+
+// =============================================================================
+
 class GrepSearcher;
 class GrepOutput;
 
@@ -70,8 +78,8 @@ class Grep {
   Grep(std::string pattern, std::string file, Options options);
   explicit Grep(Options options);
 
-  uint64_t count();
-  std::vector<Grep::Match> search();
+  std::vector<std::pair<std::string, uint64_t>> count();
+  std::vector<std::pair<std::string, std::vector<Grep::Match>>> search();
   void write(std::ostream* stream = &std::cout);
 
   Grep& set_file(std::string file);
@@ -109,7 +117,7 @@ class Grep {
  private:
   [[nodiscard]] std::vector<base_processors> get_processors() const;
 
-  [[nodiscard]] base_reader get_reader();
+  [[nodiscard]] base_reader get_reader(const std::string& file);
 
   [[nodiscard]] bool use_regex() const;
 

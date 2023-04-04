@@ -4,7 +4,7 @@
 #pragma once
 
 #include "../grep.h"
-#include "./GrepOutput.h"
+#include "./GrepResult.h"
 
 /**
  * GrepSearcher: The searcher used by the xs::Executor for searching results.

@@ -64,6 +64,10 @@ class GrepOutput : public xs::result::base::Result<std::vector<Grep::Match>> {
    */
   void add(std::vector<Grep::Match> partial_result) override;
 
+  /// called by add for colored or uncolored output depending on _options.color
+  void colored(std::vector<Grep::Match>& partial_result);
+  void uncolored(std::vector<Grep::Match>& partial_result);
+
   Grep::Options _options;
   std::ostream& _ostream;
 
@@ -72,4 +76,18 @@ class GrepOutput : public xs::result::base::Result<std::vector<Grep::Match>> {
   /// Indicates the index of the result that is written next
   uint64_t _current_index{0};
   uint64_t _lines_written{0};
+};
+
+class GrepContainer : public xs::result::base::ContainerResult<Grep::Match> {
+ public:
+  GrepContainer() = default;
+
+  void add(std::vector<Grep::Match> partial_result, uint64_t id) override;
+  void add(std::vector<Grep::Match> partial_result) override;
+
+ private:
+  /// Buffer for results that are received not in order
+  std::unordered_map<uint64_t, std::vector<Grep::Match>> _buffer{};
+  /// Indicates the index of the result that is written next
+  uint64_t _current_index{0};
 };
