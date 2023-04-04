@@ -142,9 +142,11 @@ std::vector<Grep::Match> GrepSearcher::process_plain(
   for (uint64_t i = 0; i < byte_offsets_match.size(); ++i) {
     res[i].line_number =
         _line_number ? static_cast<int64_t>(line_numbers[i]) : -1;
-    // TODO: include for only_matching stuff
     res[i].byte_position =
-        _byte_offset ? static_cast<int64_t>(byte_offsets_line[i]) : -1;
+        _byte_offset
+            ? (_only_matching ? static_cast<int64_t>(byte_offsets_match[i])
+                              : static_cast<int64_t>(byte_offsets_line[i]))
+            : -1;
     res[i].match = lines[i];
   }
   return res;
