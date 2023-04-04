@@ -39,7 +39,8 @@ uint64_t Grep::count() {
   auto executor =
       xs::Executor<xs::DataChunk, xs::result::base::CountResult, uint64_t>(
           _options.num_threads, get_reader(), get_processors(),
-          std::move(searcher));
+          std::move(searcher),
+          std::make_unique<xs::result::base::CountResult>());
   executor.join();
   return executor.getResult()->size();
 }
@@ -49,10 +50,11 @@ std::vector<Grep::Match> Grep::search() {
       _options.pattern, _options.byte_offset, _options.line_number,
       _options.only_matching, use_regex(), _options.ignore_case,
       _options.locale);
-  auto executor = xs::Executor<xs::DataChunk, GrepOutput,
-                               std::vector<Grep::Match>, Grep::Options>(
-      _options.num_threads, get_reader(), get_processors(), std::move(searcher),
-      std::move(_options));
+  auto result = std::make_unique<GrepOutput>(_options);
+  auto executor =
+      xs::Executor<xs::DataChunk, GrepOutput, std::vector<Grep::Match>>(
+          _options.num_threads, get_reader(), get_processors(),
+          std::move(searcher), std::move(result));
   executor.join();
   return {};
 }
@@ -65,11 +67,12 @@ void Grep::write(std::ostream* stream) {
         _options.pattern, _options.byte_offset, _options.line_number,
         _options.only_matching, use_regex(), _options.ignore_case,
         _options.locale);
+    auto result = std::make_unique<GrepOutput>(_options, *stream);
     auto executor =
         xs::Executor<xs::DataChunk, GrepOutput, std::vector<Grep::Match>,
                      Grep::Options, std::ostream&>(
             _options.num_threads, get_reader(), get_processors(),
-            std::move(searcher), std::move(_options), *stream);
+            std::move(searcher), std::move(result));
     executor.join();
   }
 }

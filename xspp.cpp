@@ -138,13 +138,12 @@ int main(int argc, char** argv) {
   auto out_stream = args.output_file.empty()
                         ? nullptr
                         : std::make_unique<std::ofstream>(args.output_file);
-
-  auto processor =
-      xs::Executor<xs::DataChunk, DataWriter, preprocess_result, std::string,
-                   xs::CompressionType, std::unique_ptr<std::ostream>>(
-          args.num_threads, std::move(reader), std::move(inplace_processors),
-          std::move(output_creator), std::string(args.meta_file),
-          xs::CompressionType(compression_type), std::move(out_stream));
+  auto result = std::make_unique<DataWriter>(
+      std::string(args.meta_file), xs::CompressionType(compression_type),
+      std::move(out_stream));
+  auto processor = xs::Executor<xs::DataChunk, DataWriter, preprocess_result>(
+      args.num_threads, std::move(reader), std::move(inplace_processors),
+      std::move(output_creator), std::move(result));
   processor.join();
 
   return 0;
