@@ -35,7 +35,8 @@
  * GrepOutput: The actual result class that inherits xs::BaseResult.
  *  It collects vectors of GrepPartialResults.
  */
-class GrepOutput : public xs::result::base::Result<std::vector<Grep::Match>> {
+class GrepOutput : public xs::result::base::Result<
+                       std::pair<std::string, std::vector<Grep::Match>>> {
  public:
   explicit GrepOutput(Grep::Options options, std::ostream& ostream = std::cout);
 
@@ -47,7 +48,8 @@ class GrepOutput : public xs::result::base::Result<std::vector<Grep::Match>> {
    * @param partial_result:
    * @param id: used for ordered output. Must be a closed sequence {0..X} of int
    */
-  void add(std::vector<Grep::Match> partial_result, uint64_t id) override;
+  void add(std::pair<std::string, std::vector<Grep::Match>> partial_result,
+           uint64_t id) override;
 
   /**
    * Return the number of lines written to ostream so far.
@@ -62,32 +64,45 @@ class GrepOutput : public xs::result::base::Result<std::vector<Grep::Match>> {
    *  Always writes to standard out.
    * @param partial_result
    */
-  void add(std::vector<Grep::Match> partial_result) override;
+  void add(
+      std::pair<std::string, std::vector<Grep::Match>> partial_result) override;
 
   /// called by add for colored or uncolored output depending on _options.color
-  void colored(std::vector<Grep::Match>& partial_result);
-  void uncolored(std::vector<Grep::Match>& partial_result);
+  void colored(
+      std::pair<std::string, std::vector<Grep::Match>>& partial_result);
+  void uncolored(
+      std::pair<std::string, std::vector<Grep::Match>>& partial_result);
 
   Grep::Options _options;
   std::ostream& _ostream;
 
   /// Buffer for results that are received not in order
-  std::unordered_map<uint64_t, std::vector<Grep::Match>> _buffer{};
+  std::unordered_map<uint64_t, std::pair<std::string, std::vector<Grep::Match>>>
+      _buffer{};
   /// Indicates the index of the result that is written next
   uint64_t _current_index{0};
   uint64_t _lines_written{0};
 };
 
-class GrepContainer : public xs::result::base::ContainerResult<Grep::Match> {
+class GrepContainer : public xs::result::base::Result<
+                          std::pair<std::string, std::vector<Grep::Match>>> {
  public:
   GrepContainer() = default;
 
-  void add(std::vector<Grep::Match> partial_result, uint64_t id) override;
-  void add(std::vector<Grep::Match> partial_result) override;
+  void add(std::pair<std::string, std::vector<Grep::Match>> partial_result,
+           uint64_t id) override;
+  void add(
+      std::pair<std::string, std::vector<Grep::Match>> partial_result) override;
+
+  [[nodiscard]] size_t size() const override;
+
+  std::map<std::string, std::vector<Grep::Match>> copyResultSafe();
 
  private:
   /// Buffer for results that are received not in order
-  std::unordered_map<uint64_t, std::vector<Grep::Match>> _buffer{};
+  std::unordered_map<uint64_t, std::pair<std::string, std::vector<Grep::Match>>>
+      _buffer{};
+  std::map<std::string, std::vector<Grep::Match>> _data;
   /// Indicates the index of the result that is written next
   uint64_t _current_index{0};
 };

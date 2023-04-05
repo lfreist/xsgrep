@@ -10,7 +10,9 @@ GrepOutput::GrepOutput(Grep::Options options, std::ostream& ostream)
     : _options(std::move(options)), _ostream(ostream) {}
 
 // _____________________________________________________________________________
-void GrepOutput::add(std::vector<Grep::Match> partial_result, uint64_t id) {
+void GrepOutput::add(
+    std::pair<std::string, std::vector<Grep::Match>> partial_result,
+    uint64_t id) {
   std::unique_lock lock(*this->_mutex);
   if (_current_index == id) {
     add(std::move(partial_result));
@@ -37,7 +39,8 @@ void GrepOutput::add(std::vector<Grep::Match> partial_result, uint64_t id) {
 size_t GrepOutput::size() const { return _lines_written; }
 
 // _____________________________________________________________________________
-void GrepOutput::add(std::vector<Grep::Match> partial_result) {
+void GrepOutput::add(
+    std::pair<std::string, std::vector<Grep::Match>> partial_result) {
   INLINE_BENCHMARK_WALL_START(_, "output");
   if (_options.color == Grep::Color::ON) {
     colored(partial_result);
@@ -46,10 +49,11 @@ void GrepOutput::add(std::vector<Grep::Match> partial_result) {
   }
 }
 
-void GrepOutput::colored(std::vector<Grep::Match>& partial_result) {
-  for (auto& r : partial_result) {
+void GrepOutput::colored(
+    std::pair<std::string, std::vector<Grep::Match>>& partial_result) {
+  for (auto& r : partial_result.second) {
     if (_options.print_file_path) {
-      _ostream << MAGENTA << _options.file << CYAN << ':' << COLOR_RESET;
+      _ostream << MAGENTA << partial_result.first << CYAN << ':' << COLOR_RESET;
     }
     if (_options.line_number) {
       _ostream << GREEN << r.line_number << CYAN << ':' << COLOR_RESET;
@@ -121,10 +125,11 @@ void GrepOutput::colored(std::vector<Grep::Match>& partial_result) {
   }
 }
 
-void GrepOutput::uncolored(std::vector<Grep::Match>& partial_result) {
-  for (auto& r : partial_result) {
+void GrepOutput::uncolored(
+    std::pair<std::string, std::vector<Grep::Match>>& partial_result) {
+  for (auto& r : partial_result.second) {
     if (_options.print_file_path) {
-      _ostream << _options.file << ':';
+      _ostream << partial_result.first << ':';
     }
     if (_options.line_number) {
       _ostream << r.line_number << ':';
@@ -137,7 +142,9 @@ void GrepOutput::uncolored(std::vector<Grep::Match>& partial_result) {
 }
 
 // ===== GrepContainer =========================================================
-void GrepContainer::add(std::vector<Grep::Match> partial_result, uint64_t id) {
+void GrepContainer::add(
+    std::pair<std::string, std::vector<Grep::Match>> partial_result,
+    uint64_t id) {
   std::unique_lock lock(*this->_mutex);
   if (_current_index == id) {
     add(std::move(partial_result));
@@ -160,7 +167,22 @@ void GrepContainer::add(std::vector<Grep::Match> partial_result, uint64_t id) {
   }
 }
 
-void GrepContainer::add(std::vector<Grep::Match> partial_result) {
-  _data.insert(_data.end(), std::make_move_iterator(partial_result.begin()),
-               std::make_move_iterator(partial_result.end()));
+void GrepContainer::add(
+    std::pair<std::string, std::vector<Grep::Match>> partial_result) {
+  auto search = _data.find(partial_result.first);
+  if (search == _data.end()) {
+    _data.insert(std::move(partial_result));
+  } else {
+    auto& value_data = _data.at(partial_result.first);
+    value_data.insert(value_data.end(),
+                      std::make_move_iterator(partial_result.second.begin()),
+                      std::make_move_iterator(partial_result.second.end()));
+  }
+}
+
+size_t GrepContainer::size() const { return _data.size(); }
+
+std::map<std::string, std::vector<Grep::Match>>
+GrepContainer::copyResultSafe() {
+  return _data;
 }

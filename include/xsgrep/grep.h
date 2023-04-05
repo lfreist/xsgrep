@@ -79,7 +79,7 @@ class Grep {
   explicit Grep(Options options);
 
   std::vector<std::pair<std::string, uint64_t>> count();
-  std::vector<std::pair<std::string, std::vector<Grep::Match>>> search();
+  std::map<std::string, std::vector<Grep::Match>> search();
   void write(std::ostream* stream = &std::cout);
 
   Grep& set_file(std::string file);
