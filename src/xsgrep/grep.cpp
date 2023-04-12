@@ -52,18 +52,6 @@ Grep::Grep(std::string pattern, std::string file) {
   set_file(std::move(file));
 }
 
-Grep::Grep(std::string pattern, std::string file, Grep::Options options)
-    : _options(std::move(options)) {
-  _options.pattern = std::move(pattern);
-  set_file(std::move(file));
-  // these three members need to be set using setter method in case they are set
-  //  to default values
-  set_colored_output(_options.color);
-  set_num_threads(_options.num_threads);
-  set_locale(_options.locale);
-  set_num_reader_threads(_options.num_reader_threads);
-}
-
 Grep::Grep(Options options) : _options(std::move(options)) {
   // these three members need to be set using setter method in case they are set
   //  to default values

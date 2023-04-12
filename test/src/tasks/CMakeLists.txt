@@ -1,0 +1,2 @@
+add_executable(GrepSearcherTestMain GrepSearcherTest.cpp)
+target_link_libraries(GrepSearcherTestMain PUBLIC libgrep gtest_main)

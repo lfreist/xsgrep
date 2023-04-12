@@ -26,6 +26,9 @@ include_directories(include)
 add_subdirectory(src)
 
 IF (${MAIN_PROJECT})
+    # --- GTEST --------------------------------------------------------------------------------------------------------
+    add_subdirectory(third_party/googletest)
+    include_directories(third_party/googletest/googletest/include)
     # --- BOOST --------------------------------------------------------------------------------------------------------
     find_package(Boost 1.74 REQUIRED COMPONENTS program_options)
     include_directories(${Boost_INCLUDE_DIR})
@@ -37,4 +40,9 @@ IF (${MAIN_PROJECT})
     target_link_libraries(xs PUBLIC libgrep boost_program_options)
 
     add_executable(just_read src/benchutil/just_read.cpp)
+
+    include(CTest)
+    add_subdirectory(test)
+
+    add_test(GrepSearcher test/src/tasks/GrepSearcherTestMain)
 endif ()

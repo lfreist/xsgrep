@@ -75,7 +75,6 @@ class Grep {
   // Constructors
   Grep() = default;
   Grep(std::string pattern, std::string file);
-  Grep(std::string pattern, std::string file, Options options);
   explicit Grep(Options options);
 
   std::vector<std::pair<std::string, uint64_t>> count();
